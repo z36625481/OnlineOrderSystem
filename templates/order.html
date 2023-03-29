@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset='utf-8'
+			  name='DYH'
+			  content='This a test html by DYH'>
+		<meta name="viewport" content="width=device-width">
+		<link rel='shortcut icon' href='../static/images/testicon.ico' type='image/x-icon'>
+		<link href="../static/styles/order.css" rel="stylesheet" type="text/css">
+		<title>OrderSystem</title>
+	</head>
+    <body>
+	<header>
+		<h1>OrderSystem</h1>
+	</header>
+	<nav>
+		<ul>
+			<li><a href="#noodles">麵類</a></li>
+			<li><a href="#hotpot">鍋燒系列</a></li>
+			<li><a href="#rices">飯類</a></li>
+			<li><a href="#bento">便當</a></li>
+			<li><a href="#soups">湯類</a></li>
+			<li><a href="#others">其他</a></li>
+		</ul>
+	<nav>
+	<main>
+		<article>
+			<section id="noodles">
+				<ul>
+					{% for items in menu %}
+						{% if "麵" in items.1 %}
+							<li><p>{{items.1}}</p></li>
+						{% endif %}	
+					{% endfor %}
+				</ul>
+			</section>
+			<section id="hotpot">
+				<ul>
+					{% for items in menu %}
+						{% if "鍋燒" in items.1 %}
+							<li><p>{{items.1}}</p></li>
+						{% endif %}	
+					{% endfor %}
+				</ul>
+			</section>
+			<section id="rice">
+				<ul>
+					{% for items in menu %}
+						{% if "飯" in items.1 %}
+							<li><p>{{items.1}}</p></li>
+						{% endif %}	
+					{% endfor %}
+				</ul>
+			</section>
+			<section id="bento">
+				<ul>
+					{% for items in menu %}
+						{% if "便當" in items.1 %}
+							<li><p>{{items.1}}</p></li>
+						{% endif %}	
+					{% endfor %}
+				</ul>
+			</section>
+			<section id="soups">
+				<ul>
+					{% for items in menu %}
+						{% if "湯" in items.1 %}
+							<li><p>{{items.1}}</p></li>
+						{% endif %}	
+					{% endfor %}
+				</ul>
+			</section>
+			<section id="others">
+				<ul>
+					{% for items in menu %}
+						{% if ("麵" not in items.1) and ("鍋燒" not in items.1) and ("飯" not in items.1)
+						and ("便當" not in items.1) and ("湯" not in items.1)%}
+							<li><p>{{items.1}}</p></li>
+						{% endif %}	
+					{% endfor %}
+				</ul>
+			</section>
+		</article>		
+	</main>
+	<footer>
+	</footer>
+	</body>
+</html>

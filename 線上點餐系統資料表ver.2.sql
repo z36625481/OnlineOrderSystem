@@ -1,6 +1,6 @@
 -- create database Onlineordersys
 -- drop database Onlineordersys
--- use Onlineordersys
+use Onlineordersys
 
 
 -- delete from Menu
@@ -18,7 +18,7 @@ select * from Menuchoose
 create table menu(
     DisherID int primary key identity not null, -- 料理 ID
     dishes nvarchar(50) not null,     -- 料理名稱
-    HowMuch int not null,   -- 總金額
+    price int not null,   -- 金額
     )
 create unique index same on menu(dishes)  -- 建立唯一索引 確保其欄位( 料理名稱 )值之唯一性
 
