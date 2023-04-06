@@ -23,8 +23,9 @@ def index():
 def query():
     sql = "select * from dbo.menu"
     menu = db.engine.execute(sql)
-    menu = list(menu)        
-    return render_template("order.html", **locals())  
+    menu = list(menu)
+    noodles = 'noodles'        
+    return render_template("menu.html", **locals())  
 
 if __name__ == "__main__":    
      app.run()
