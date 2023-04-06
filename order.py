@@ -15,14 +15,24 @@ app.config["SQLALCHEMY_DATABASE_URI"] = 'mssql+pymssql://pyuser:1234567@localhos
 
 db = SQLAlchemy(app)
 
+def cleanup(session):    
+    session.close()    
+    
 @app.route('/')
 def index():
     return '資料庫連線成功'
 
 @app.route('/qurey')
 def query():
-    sql = "select * from dbo.menu"
-    menu = db.engine.execute(sql)
+    try:
+        sql = "select * from dbo.menu"
+        menu = db.engine.execute(sql)
+        
+    except Exception as err:
+        raise err
+    finally:
+        cleanup(db.session)
+        
     menu = list(menu)
     noodles = 'noodles'        
     return render_template("menu.html", **locals())  

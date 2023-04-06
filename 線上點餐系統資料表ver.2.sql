@@ -3,15 +3,17 @@
 use Onlineordersys
 
 
--- delete from Menu
+-- delete from menu
 /*
-select * from Menu
+select * from menu
 go
 select * from MenuItems
 go
 select * from Menuplus
 go
-select * from Menuchoose
+select * from MenuChoose
+go
+select * from seat
 go
 select * from OrderMeterial
 go
@@ -45,7 +47,7 @@ create table MenuPlus(
 
 -- 菜單品項關聯 (A 料理對應到 B 類型)
 create table MenuChoose(
-    DisherID int foreign key references Menu(DisherID) on delete cascade not null,       -- 什麼樣的料理
+    DisherID int foreign key references menu(DisherID) on delete cascade not null,       -- 什麼樣的料理
     MenuItemsID int foreign key references MenuItems(MenuItemsID) on delete cascade　null -- 會有甚麼樣的類型選擇
     )
 
@@ -69,9 +71,9 @@ create table OrderMeterial(
 create table OrderRecord(
     OrderID int primary key identity not null,  -- 訂單ID
     OrderNum int references OrderMeterial(OrderNum)not null,    --訂單編號 (參考訂單紀錄)
-    DisherID int foreign key references Menu(DisherID) not null,    -- 參考料理 ID
+    DisherID int foreign key references menu(DisherID) not null,    -- 參考料理 ID
     Quantity int not null,        -- 數量
-    TableID int foreign key references Seat(TableID) not null -- 參考桌號
+    TableID int foreign key references seat(TableID) not null -- 參考桌號
     )
 
 
