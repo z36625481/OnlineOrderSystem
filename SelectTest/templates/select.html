@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>查詢結果</title>
+</head>
+<body>
+    <h3>{{ Y }} 年 {{ M }} 月 {{ D }} 日 的銷售紀錄為 </h3>
+    <h2>
+        {% for item in Meterial %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    <br/>
+    <img src="http://127.0.0.1:5000/static/compare.png" />
+</body>
+</html>
