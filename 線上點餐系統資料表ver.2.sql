@@ -12,6 +12,10 @@ go
 select * from Menuplus
 go
 select * from Menuchoose
+go
+select * from OrderMeterial
+go
+select * from OrderRecord
 */
 
 --菜單
@@ -19,9 +23,10 @@ create table menu(
     DisherID int primary key identity not null, -- 料理 ID
     dishes nvarchar(50) unique not null,     -- 料理名稱
     price int not null,   -- 金額
+	DishType nvarchar(50) -- 類型
     )
 --create unique index same on menu(dishes)  -- 建立唯一索引 確保其欄位( 料理名稱 )值之唯一性
-
+--alter table menu ADD DishType nvarchar(50)
 -- 品項類型 
 create table MenuItems(
     MenuItemsID int primary key not null,   -- 品項的ID
