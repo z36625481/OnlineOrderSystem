@@ -8,72 +8,38 @@ begin
 end
 go
 
-create or alter procedure SelectNoodles
+create or alter procedure SelectMenu
 as
 begin
 	SET NOCOUNT ON
-	select dishes from dbo.menu
-	where DishType = '麵食'
+	select dishes,
+		   price,
+		   DishType
+	from dbo.menu	
 	SET NOCOUNT OFF
 end
 go
 
-create or alter procedure SelectHotpot
+create or alter procedure SelectOrder
 as
 begin
 	SET NOCOUNT ON
-	select dishes from dbo.menu
-	where DishType = '鍋燒'
-	SET NOCOUNT OFF
-end
-go
-
-create or alter procedure SelectRice
-as
-begin
-	SET NOCOUNT ON
-	select dishes from dbo.menu
-	where DishType = '飯食'
-	SET NOCOUNT OFF
-end
-go
-
-create or alter procedure SelectSoup
-as
-begin
-	SET NOCOUNT ON
-	select dishes from dbo.menu
-	where DishType = '湯品'
-	SET NOCOUNT OFF
-end
-go
-
-create or alter procedure SelectOthers
-as
-begin
-	SET NOCOUNT ON
-	select dishes from dbo.menu
-	where DishType = '其他'
-	SET NOCOUNT OFF
-end
-go
-
-create or alter procedure SelectSidedishes
-as
-begin
-	SET NOCOUNT ON
-	select dishes from dbo.menu
-	where DishType = '小菜'
-	SET NOCOUNT OFF
-end
-go
-
-create or alter procedure SelectOthers
-as
-begin
-	SET NOCOUNT ON
-	select dishes from dbo.menu
-	where DishType = '其他'
+	select p.OrderNum,
+		   OrderTime,
+		   TableID,
+		   Total
+	from OrderMeterial join
+	(
+		select  OrderRecord.OrderNum,
+				sum(menu.price * OrderRecord.Quantity) as Total 
+		from OrderMeterial 
+			join OrderRecord on OrderMeterial.OrderNum = OrderRecord.OrderNum 
+			join menu on OrderRecord.DisherID = menu.DisherID	 
+		where (OrderMeterial.PayTime is null)
+		group by OrderRecord.OrderNum
+	) p 
+	on OrderMeterial.OrderNum = p.OrderNum
+	where PayTime is null
 	SET NOCOUNT OFF
 end
 go

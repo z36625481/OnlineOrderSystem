@@ -17,25 +17,40 @@ db = SQLAlchemy(app)
 
 def cleanup(session):    
     session.close()    
-    
+
+     
 @app.route('/')
 def index():
     return '資料庫連線成功'
 
-@app.route('/qurey')
-def query():
+@app.route('/menu')
+def menu():
     try:
-        sql = "select * from dbo.menu"
-        menu = db.engine.execute(sql)
-        
+        sql = "execute SelectDishType"
+        DishType = db.engine.execute(sql)
+        sql = "execute SelectMenu"
+        menu = db.engine.execute(sql)        
     except Exception as err:
         raise err
     finally:
         cleanup(db.session)
-        
+    
+    DishType = list(DishType)    
     menu = list(menu)
-    noodles = 'noodles'        
-    return render_template("menu.html", **locals())  
+                
+    return render_template("flaskMenu.html", **locals())
+
+@app.route('/checkorder')
+def checkorder():
+    try:
+        sql = "execute SelectOrder"
+        orders = db.engine.execute(sql)              
+    except Exception as err:
+        raise err
+    finally:
+        cleanup(db.session)
+    orders = list(orders)    
+    return render_template("flaskOrder.html", **locals())
 
 if __name__ == "__main__":    
      app.run()

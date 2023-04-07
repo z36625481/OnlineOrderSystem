@@ -6,11 +6,11 @@ import random
 start_time = datetime.datetime(2022, 6, 1)
 
 # 連接資料庫
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=choco;PWD=1234')
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=pyuser;PWD=1234567')
 cursor = conn.cursor()
 
 # 新增隨機訂單
-for i in range(200):
+for i in range(5):
     # 訂單時間 1-30日
     order_time = start_time + datetime.timedelta(days=random.randint(1, 30))
     # 結帳時間 1-2小時候
@@ -19,7 +19,7 @@ for i in range(200):
     table_id = random.randint(1, 5)
     
     # insert訂單紀錄
-    conn.execute(f"INSERT INTO OrderMeterial (OrderTime, PayTime, TableID) VALUES ('{order_time}', '{pay_time}', {table_id})")
+    conn.execute(f"INSERT INTO OrderMeterial (OrderTime, TableID) VALUES ('{start_time}', {table_id})")
     
     
     
