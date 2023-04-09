@@ -2,6 +2,10 @@ html {
     font-family: placeholder: "Noto Sans TC", sans-serif;
 }
 
+body {
+	background-color: rgb(249, 245, 245);
+}
+
 .banner{
     height: 450px;
 }

@@ -10,7 +10,6 @@ from flask import render_template
 
 app = Flask(__name__)
 
-# 必須大寫
 app.config["SQLALCHEMY_DATABASE_URI"] = 'mssql+pymssql://pyuser:1234567@localhost:1433/Onlineordersys'
 
 db = SQLAlchemy(app)
@@ -49,9 +48,10 @@ def checkorder():
         raise err
     finally:
         cleanup(db.session)
+        
     orders = list(orders)    
     return render_template("flaskOrder.html", **locals())
-
+    
 if __name__ == "__main__":    
      app.run()
     
