@@ -28,7 +28,7 @@ begin
 		   OrderTime,
 		   TableID,
 		   Total
-	from OrderMeterial join
+	from OrderMeterial o join
 	(
 		select  OrderRecord.OrderNum,
 				sum(menu.price * OrderRecord.Quantity) as Total 
@@ -38,8 +38,18 @@ begin
 		where (OrderMeterial.PayTime is null)
 		group by OrderRecord.OrderNum
 	) p 
-	on OrderMeterial.OrderNum = p.OrderNum
-	where PayTime is null
+	on o.OrderNum = p.OrderNum	
 	SET NOCOUNT OFF
 end
 go
+
+create or alter procedure UpdatePayTime
+@OrderNum int,
+@PayTime datetime     
+as
+begin
+update OrderMeterial         
+set PayTime = @PayTime
+where OrderNum = @OrderNum 
+end
+

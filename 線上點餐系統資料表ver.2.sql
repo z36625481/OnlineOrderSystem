@@ -15,7 +15,7 @@ select * from MenuChoose
 go
 select * from seat
 go
-select * from OrderMeterial
+select * from OrderMeterial where PayTime is null
 go
 select * from OrderRecord
 */
