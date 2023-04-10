@@ -16,7 +16,8 @@ body {
 .category-list-item{
 	text-decoration: none;            
 }
-.list-group-item{
+.list-group-item,
+#modal-body-text{
 	text-align: center;
 }
 .categorylabel{            

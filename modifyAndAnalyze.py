@@ -58,6 +58,101 @@ def modifyMenu():
     menu = list(menu)
                 
     return render_template("flaskModifyMenu.html", **locals())
+
+@app.route('/insertMenu', methods=['GET', 'POST'])
+def insertMenu():
+    '''
+        if request.method == 'POST':
+        payTime = (datetime.datetime.now())
+        payTimeStr = payTime.strftime("%Y-%m-%d %H:%M:%S")
+        orderNum = int(request.values['checkNum'])
+        try:
+            sql = (f"execute UpdatePayTime {orderNum}, '{payTimeStr}'")
+            cursor.execute(sql)
+            conn.commit()
+        except Exception as err:
+            raise err
+        finally:            
+            cleanup(db.session)
+    '''                       
+    try:
+        sql = "execute SelectDishType"
+        DishType = db.engine.execute(sql)
+        sql = "execute SelectMenu"
+        menu = db.engine.execute(sql)        
+    except Exception as err:
+        raise err
+    finally:
+        cleanup(db.session)
     
+    DishType = list(DishType)    
+    menu = list(menu)
+                
+    return render_template("flaskInsertMenu.html", **locals())    
+
+@app.route('/checkRevenue', methods=['GET', 'POST'])
+def checkRevenue():
+    '''
+        if request.method == 'POST':
+        payTime = (datetime.datetime.now())
+        payTimeStr = payTime.strftime("%Y-%m-%d %H:%M:%S")
+        orderNum = int(request.values['checkNum'])
+        try:
+            sql = (f"execute UpdatePayTime {orderNum}, '{payTimeStr}'")
+            cursor.execute(sql)
+            conn.commit()
+        except Exception as err:
+            raise err
+        finally:            
+            cleanup(db.session)
+    '''                       
+    try:
+        sql = "execute SelectDishType"
+        DishType = db.engine.execute(sql)
+        sql = "execute SelectMenu"
+        menu = db.engine.execute(sql)        
+    except Exception as err:
+        raise err
+    finally:
+        cleanup(db.session)
+    
+    DishType = list(DishType)    
+    menu = list(menu)
+                
+    return render_template("flaskCheckRevenue.html", **locals())
+
+@app.route('/analyze', methods=['GET', 'POST'])
+def analyze():
+    '''
+        if request.method == 'POST':
+        payTime = (datetime.datetime.now())
+        payTimeStr = payTime.strftime("%Y-%m-%d %H:%M:%S")
+        orderNum = int(request.values['checkNum'])
+        try:
+            sql = (f"execute UpdatePayTime {orderNum}, '{payTimeStr}'")
+            cursor.execute(sql)
+            conn.commit()
+        except Exception as err:
+            raise err
+        finally:            
+            cleanup(db.session)
+    '''                       
+    try:
+        sql = "execute SelectDishType"
+        DishType = db.engine.execute(sql)
+        sql = "execute SelectMenu"
+        menu = db.engine.execute(sql)        
+    except Exception as err:
+        raise err
+    finally:
+        cleanup(db.session)
+    
+    DishType = list(DishType)    
+    menu = list(menu)
+                
+    return render_template("flaskAnalyze.html", **locals())
+
+
+
 if __name__ == "__main__":
     app.run()

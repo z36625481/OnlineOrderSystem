@@ -4,7 +4,7 @@ const modal = document.getElementById('exampleModal')
 
 window.addEventListener('load', function (){ 
     modal.addEventListener('show.bs.modal', function (e) {        
-        let btn = e.relatedTarget;        
+        let btn = e.relatedTarget;                
         orderNum.value = btn.value;   
     })
 

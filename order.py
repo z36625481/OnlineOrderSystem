@@ -4,7 +4,7 @@ Created on Wed Mar 29 14:59:51 2023
 
 @author: DYH
 """
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
 
@@ -22,13 +22,26 @@ def cleanup(session):
 def index():
     return '資料庫連線成功'
 
-@app.route('/menu')
+@app.route('/menu', methods=['GET', 'POST'])
 def menu():
+    '''    
+    if request.method == 'POST':        
+        try:
+            sql = (f"execute UpdatePayTime {orderNum}, '{payTimeStr}'")
+            cursor.execute(sql)
+            conn.commit()
+        except Exception as err:
+            raise err
+        finally:            
+            cleanup(db.session)
+    '''            
     try:
         sql = "execute SelectDishType"
         DishType = db.engine.execute(sql)
         sql = "execute SelectMenu"
-        menu = db.engine.execute(sql)        
+        menu = db.engine.execute(sql)
+        sql = "execute SelectSideDish"
+        sideDish = db.engine.execute(sql)
     except Exception as err:
         raise err
     finally:
@@ -36,6 +49,7 @@ def menu():
     
     DishType = list(DishType)    
     menu = list(menu)
+    sideDish = list(sideDish)
                 
     return render_template("flaskMenu.html", **locals())
 
