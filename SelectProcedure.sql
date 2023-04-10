@@ -48,8 +48,20 @@ create or alter procedure UpdatePayTime
 @PayTime datetime     
 as
 begin
-update OrderMeterial         
-set PayTime = @PayTime
-where OrderNum = @OrderNum 
+	SET NOCOUNT ON
+	update OrderMeterial         
+	set PayTime = @PayTime
+	where OrderNum = @OrderNum 
+	SET NOCOUNT OFF
 end
+go
 
+create or alter procedure SelectSideDish   
+as
+begin
+	SET NOCOUNT ON	
+	select  SideDishID, 
+			dishes
+	from MenuPlus where MenuItemsID = 3
+	SET NOCOUNT OFF
+end

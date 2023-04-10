@@ -13,6 +13,10 @@ body {
 	width: 24px;
 	height: 24px;
 }
+#cartImg{
+	width: 240px;
+	height: 240px;
+}
 .category-list-item{
 	text-decoration: none;            
 }

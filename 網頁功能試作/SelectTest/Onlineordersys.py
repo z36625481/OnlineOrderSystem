@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pymssql://sa:1234@localhost:1433/Onlineordersys'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pymssql://pyuser:1234567@localhost:1433/Onlineordersys'
 
 db = SQLAlchemy(app)
 
@@ -66,8 +66,8 @@ def YMD():
     
     
 
-    # 下載圖表
-    plt.savefig('C:/Users/User/Desktop/OnlineOrderSystem/網頁功能試作/SelectTest/static/compare.png')
+    # 下載圖表    
+    plt.savefig('C:/Users/DYH/Desktop/OnlineOrderSystem/OnlineOrderSystem/網頁功能試作/SelectTest/static/compare.png')
     
     return render_template('select.html', **locals())
     
@@ -95,7 +95,7 @@ def TYPE():
     plt.ylabel('類型')         # y軸
     
     # 下載圖表
-    plt.savefig('C:/Users/User/Desktop/OnlineOrderSystem/網頁功能試作/SelectTest/static/Type.png')
+    plt.savefig('C:/Users/DYH/Desktop/OnlineOrderSystem/OnlineOrderSystem/網頁功能試作/SelectTest/static/type.png')
     
     return render_template('detail.html', **locals())
 

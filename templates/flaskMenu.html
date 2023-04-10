@@ -100,8 +100,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>            
           </div>
           <div class="modal-body" id="cartModalBody">
-            <div class="row">              
-              <img src="../static/images/noItems.jpg">
+            <div class="row">
+              <div class="col-md-4 offset-md-4">
+                <img src="../static/images/noItems.jpg" class="cartImg">
+              </div>
             </div>
             <div id="modal-body-text">              
               目前購物車沒有商品！
@@ -150,6 +152,7 @@
       const itemsModalBody = document.getElementById('itemsModalBody')
       const cartModal = document.getElementById('cartModal')
       const cartModalBody = document.getElementById('cartModalBody')
+           
       const cartList = []      
       const inputQuantity = 
       `
@@ -202,8 +205,7 @@
       function render() {        
           let htmlStr = ''
 
-          cartList.forEach(function (item) {
-            console.log(item)
+          cartList.forEach(function (item) {            
             htmlStr = htmlStr + 
             `
               <div class="card mb-3">
@@ -224,14 +226,23 @@
                     </div>
                   </div>                    
                   <div class="col-md-1 offset-md-2 m-auto">
-                    <button class="btn btn-secondary rounded-pill cancelButton">取消</button>                  
+                    <button type="button" class="btn btn-secondary rounded-pill cancelButton">取消</button>                  
                   </div>                 
                 </div>
               </div>
-            `
-          })        
+            `                       
+          })                  
         cartModalBody.innerHTML = htmlStr
+        const cancelButton = document.querySelectorAll('.cancelButton');       
         
+        for(let i=0; i<cancelButton.length; i++){
+          cancelButton[i].index = i;
+          cancelButton[i].onclick = function(){
+            cartList.splice(cancelButton[i].index, 1);
+            alert('已取消此商品');
+            render();              
+          }
+        }        
       }
       
       window.addEventListener('load', function (){ 
@@ -256,11 +267,21 @@
                 name: itemName.value,
                 itemQuantity: itemQuantity.value,
                 price: itemPrice.value
-              })
-              render()
-              alert('已加入購物車')                                                                                                               
+              });
+              render();
+              alert('已加入購物車');                                                                                                              
           })
-          
+
+          submitCheck.addEventListener('click', function(){
+              const itemQuantity = document.getElementById('itemQuantity')              
+              cartList.unshift({
+                name: itemName.value,
+                itemQuantity: itemQuantity.value,
+                price: itemPrice.value
+              });
+              render();
+              alert('已加入購物車');                                                                                                              
+          })     
       })
     </script>
     <script src="../static/scripts/popper.min.js"></script>  
