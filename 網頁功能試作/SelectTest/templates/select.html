@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>查詢結果</title>
+</head>
+<body>
+    <h3>{{ Y }} 年 {{ M }} 月的銷售紀錄為 </h3>
+    <div>
+        {% for item in Meterial %}
+        <div> <a href="{{ url_for('TYPE', type=item[0], Y=Y, M=M )}}">{{item[0]}}</a> {{ item[1] }} </div>
+        {% endfor %}
+    </div>
+    <br/>
+    <img src="../static/compare.png" />
+</body>
+</html>

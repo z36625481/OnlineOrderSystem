@@ -2,15 +2,15 @@ import datetime
 import pyodbc
 import random
 
-# 訂單紀錄的起始時間
-start_time = datetime.datetime(2022, 6, 1)
-
 # 連接資料庫
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=pyuser;PWD=1234567')
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=choco;PWD=1234')
 cursor = conn.cursor()
 
+# 訂單紀錄的起始時間
+start_time = datetime.datetime(2023, 3, 31)
+
 # 新增隨機訂單
-for i in range(5):
+for i in range(200):
     # 訂單時間 1-30日
     order_time = start_time + datetime.timedelta(days=random.randint(1, 30))
     # 結帳時間 1-2小時候
@@ -19,7 +19,7 @@ for i in range(5):
     table_id = random.randint(1, 5)
     
     # insert訂單紀錄
-    conn.execute(f"INSERT INTO OrderMeterial (OrderTime, TableID) VALUES ('{start_time}', {table_id})")
+    conn.execute(f"INSERT INTO OrderMeterial (OrderTime, PayTime, TableID) VALUES ('{order_time}', '{pay_time}', {table_id})")
     
     
     
@@ -32,11 +32,18 @@ for i in range(5):
     table_ids = cursor.fetchone()[0]
     # 菜單ID
     disher_ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
-    # 權重
-    weights =    [10, 10, 10, 10, 10, 20, 20, 20, 20, 15, 20, 8, 5, 5, 5, 15, 10, 8, 8, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 20, 20, 16, 16, 16, 16, 16, 16, 6, 6, 6, 6, 6, 6, 15, 2, 1] # 每個disher_id的權重
-
-    # 訂單明細
-    for i in range(random.randint(1, 5)):
+    
+    # 權重          1    2    3    4    5    6    7    8    9   10   11   12   13   14   15  16  17   18  19  20   21   22  23  24  25  26  27  28  29   30   31  32  33  34   35   36   37   38   39  40   41   42   43  44  45  46  47  48  49  50  51 
+    weights =    [300, 300, 300, 300, 300, 200, 120, 180, 200, 180, 200, 120, 150, 150, 30, 30, 100, 20, 15, 100, 100, 50, 80, 100, 50, 50, 80, 30, 60, 100, 40, 60, 20, 150, 150, 150, 100, 120, 80, 120, 120, 120, 60, 40, 80, 80, 80, 60, 150, 5, 2] # 每個disher_id的權重
+    
+    #  一筆訂單的消費數量權重
+    NW = [40, 50, 30, 10, 9, 7, 5, 3, 2, 1]
+    #  生成1-10筆訂消費紀錄
+    num = random.choices(range(1, 11), weights=NW, k=1)[0]
+    
+    
+    # 訂單明細                 
+    for i in range(num):
         # 產生訂單明細資料
         disher_id = random.choices(disher_ids, weights)[0]
         quantity = random.randint(1, 10)

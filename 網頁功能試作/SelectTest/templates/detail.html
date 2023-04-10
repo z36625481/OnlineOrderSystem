@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>查詢結果</title>
+</head>
+<body>
+    <h3>{{ Y }} 年 {{ M }} 月, {{ T }}類型的銷售紀錄為 </h3>
+    <div>
+        {% for item in Meterial %}
+        <div> {{item[0]}} 總銷售額為{{ item[1] }} </div>
+        {% endfor %}
+    </div>
+    <br/>
+    <img src="../static/Type.png" />
+</body>
+</html>

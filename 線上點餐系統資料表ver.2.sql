@@ -15,9 +15,11 @@ select * from MenuChoose
 go
 select * from seat
 go
-select * from OrderMeterial where PayTime is null
+select * from OrderMeterial
 go
 select * from OrderRecord
+go
+select * from signup
 */
 
 --菜單
@@ -76,7 +78,12 @@ create table OrderRecord(
     TableID int foreign key references seat(TableID) not null -- 參考桌號
     )
 
-
+-- 登入系統試作
+create table signup(
+	UserName nvarchar(50) not null,
+	Email nvarchar(50) primary key not null,
+	PW nvarchar(50) not null)
+	
     
 
 
