@@ -92,25 +92,25 @@
         </div>        
       </div>       
     <!-- cartModal -->
-    <form class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true" method="post">
+    <form class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true" method="post" actin="">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div class="modal-content">
           <div class="modal-header">            
             <h5 class="modal-title" id="cartModalLabel">購物車頁面</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>            
           </div>
-          <div class="modal-body" id="cartModalBody">
-            <div class="row">
-              <div class="col-md-4 offset-md-4">
-                <img src="../static/images/noItems.jpg" class="cartImg">
-              </div>
-            </div>
-            <div id="modal-body-text">              
-              目前購物車沒有商品！
-            </div>            
+          <div class="modal-body" id="cartModalBody">                        
           </div>
           <div class="modal-footer justify-content-center">
-            <button type="submit" class="btn btn-warning rounded-pill" id="submitCart">前往購買</button>                        
+            <div class="tableList">
+              <select class="form-select" aria-label="Default select example" name="tableID" required>
+                <option selected value="">請選擇桌號</option>
+                {% for table in tables %}
+                  <option value={{table.0}}>{{table.0}}</option>
+                {% endfor %}
+              </select>
+            </div>  
+            <button type="submit" class="btn btn-warning rounded-pill" id="submitCart" name="cartList">確認訂單</button>                        
           </div>
         </div>
       </div>
@@ -123,13 +123,13 @@
             <div class="mb-3 row">
               <label for="itemNameID" class="col-md-4 col-form-label">品名：</label>
               <div class="col-md-8">
-                <input type="text" readonly class="form-control-plaintext" id="itemNameID" name="itemName">
+                <input type="text" readonly class="form-control-plaintext text-info" id="itemNameID" name="itemName">
               </div>
             </div>
             <div class="mb-3 row">
               <label for="itemPriceID" class="col-md-4 col-form-label">價格：</label>
               <div class="col-md-8">
-                <input type="text" readonly class="form-control-plaintext" id="itemPriceID" name="itemPrice">
+                <input type="text" readonly class="form-control-plaintext text-info" id="itemPriceID" name="itemPrice">
               </div>
             </div> 
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -152,12 +152,13 @@
       const itemsModalBody = document.getElementById('itemsModalBody')
       const cartModal = document.getElementById('cartModal')
       const cartModalBody = document.getElementById('cartModalBody')
+      const submitCart = document.getElementById('submitCart')
            
       const cartList = []      
       const inputQuantity = 
       `
           <div class="mb-3">
-            <label for="exampleInputNum" class="form-label">輸入數量</label>
+            <label for="itemQuantity" class="form-label">輸入數量</label>
             <input type="number" id="itemQuantity" name="inputNum" min="1" max="10" value="1"/>
             <div id="help" class="form-text">如有大量需求(10碗以上)，請先來電詢問是否有充足備料</div>
           </div>
@@ -194,45 +195,61 @@
       const hotpotModal = inputQuantity + 
       `          
           <div class="mb-3">
-            <select class="form-select" aria-label="Default select example">
-            <option selected>請選擇主食</option>
+            <label for="selectDish" class="form-label">選擇主食</label>
+            <select class="form-select" aria-label="Default select example" id="selectDish">            
             {% for dish in sideDish %}
               <option value={{dish.0}} name="dishID">{{dish.1}}</option>
             {% endfor %}
             </select>
           </div>     
       `
+      const defaultCart =
+      `
+          <div class="row">
+            <div class="col-md-4 offset-md-4">
+              <img src="../static/images/noItems.jpg" class="cartImg">
+            </div>
+          </div>
+          <div id="modal-body-text">              
+            目前購物車沒有商品！
+          </div>
+      ` 
       function render() {        
           let htmlStr = ''
 
-          cartList.forEach(function (item) {            
-            htmlStr = htmlStr + 
-            `
-              <div class="card mb-3">
-                <div class="row g-0">              
-                  <div class="col-md-3">
-                    <div class="card-body">                  
-                      <p class="card-text">品名：${item.name}</p>                  
+          if (cartList.length == 0){
+              cartModalBody.innerHTML = defaultCart
+          }else{
+            cartList.forEach(function (item) {            
+              htmlStr = htmlStr + 
+              `
+                <div class="card mb-3">
+                  <div class="row g-0">              
+                    <div class="col-md-3">
+                      <div class="card-body">                  
+                        <p class="card-text">品名：${item.name}</p>                  
+                      </div>
                     </div>
+                    <div class="col-md-3">
+                      <div class="card-body">                  
+                        <p class="card-text">價格：${item.price}</p>                  
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="card-body">                  
+                        <p class="card-text">數量：${item.itemQuantity}</p>                  
+                      </div>
+                    </div>                    
+                    <div class="col-md-1 offset-md-2 m-auto">
+                      <button type="button" class="btn btn-secondary rounded-pill cancelButton">取消</button>                  
+                    </div>                 
                   </div>
-                  <div class="col-md-3">
-                    <div class="card-body">                  
-                      <p class="card-text">價格：${item.price}</p>                  
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="card-body">                  
-                      <p class="card-text">數量：${item.itemQuantity}</p>                  
-                    </div>
-                  </div>                    
-                  <div class="col-md-1 offset-md-2 m-auto">
-                    <button type="button" class="btn btn-secondary rounded-pill cancelButton">取消</button>                  
-                  </div>                 
                 </div>
-              </div>
-            `                       
-          })                  
+              `                       
+            })
+                              
         cartModalBody.innerHTML = htmlStr
+      }
         const cancelButton = document.querySelectorAll('.cancelButton');       
         
         for(let i=0; i<cancelButton.length; i++){
@@ -242,7 +259,8 @@
             alert('已取消此商品');
             render();              
           }
-        }        
+        };
+        submitCart.value = JSON.stringify(cartList);            
       }
       
       window.addEventListener('load', function (){ 
@@ -270,18 +288,21 @@
               });
               render();
               alert('已加入購物車');                                                                                                              
+          })    
+          
+          cartModal.addEventListener('show.bs.modal', function () {        
+              if (cartList.length == 0){
+                cartModalBody.innerHTML = defaultCart
+              }
           })
 
-          submitCheck.addEventListener('click', function(){
-              const itemQuantity = document.getElementById('itemQuantity')              
-              cartList.unshift({
-                name: itemName.value,
-                itemQuantity: itemQuantity.value,
-                price: itemPrice.value
-              });
-              render();
-              alert('已加入購物車');                                                                                                              
-          })     
+          submitCart.addEventListener('click', function(){
+              if (cartList.length == 0){
+                alert('尚未選購商品！');
+                window.location.href = window.location.href;
+              }
+                                                                                                                            
+          })
       })
     </script>
     <script src="../static/scripts/popper.min.js"></script>  

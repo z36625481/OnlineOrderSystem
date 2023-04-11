@@ -15,11 +15,19 @@ select * from MenuChoose
 go
 select * from seat
 go
-select * from OrderMeterial
+select * from OrderMeterial 
 go
-select * from OrderRecord
+select * from OrderRecord 
 go
 select * from signup
+go
+select * from OrderMeterial where PayTime is null
+go
+select * from OrderMeterial a join OrderRecord b on a.OrderNum = b.OrderNum 
+where a.PayTime is null
+go
+select * from OrderMeterial a join OrderRecord b on a.OrderNum = b.OrderNum 
+
 */
 
 --菜單
@@ -72,7 +80,7 @@ create table OrderMeterial(
 -- 訂單明細
 create table OrderRecord(
     OrderID int primary key identity not null,  -- 訂單ID
-    OrderNum int references OrderMeterial(OrderNum)not null,    --訂單編號 (參考訂單紀錄)
+    OrderNum int references OrderMeterial(OrderNum) on delete cascade not null,    --訂單編號 (參考訂單紀錄)
     DisherID int foreign key references menu(DisherID) not null,    -- 參考料理 ID
     Quantity int not null,        -- 數量
     TableID int foreign key references seat(TableID) not null -- 參考桌號

@@ -62,6 +62,44 @@ begin
 	SET NOCOUNT ON	
 	select  SideDishID, 
 			dishes
-	from MenuPlus where MenuItemsID = 3
+	from MenuPlus p join MenuItems i on p.MenuItemsID = i.MenuItemsID
+	where i.items = '主食'
 	SET NOCOUNT OFF
 end
+go
+
+create or alter procedure InsertOrderMeterial
+@OrderTime datetime,
+@TableID int
+as
+begin
+	SET NOCOUNT ON	
+	insert into OrderMeterial(OrderTime, TableID)
+	values(@OrderTime, @TableID)
+	SET NOCOUNT OFF
+end
+go
+
+create or alter procedure SelectOrderNum
+as
+begin
+	SET NOCOUNT ON
+	select max(OrderNum)  
+	from OrderMeterial 
+	where PayTime is null
+	SET NOCOUNT OFF
+end
+go
+
+create or alter procedure InsertOrderRecord
+@OrderNum int,
+@DisherID int,
+@quantity int,
+@TableID int
+as
+begin	
+	insert into [dbo].[OrderRecord](OrderNum, DisherID, Quantity, TableID) -- 新增 "訂單編號", "菜單編號", "數量", "桌號"
+	values(@OrderNum, @DisherID, @Quantity, @TableID)                    --要新增的訂單編號, 要新增的品項, 新增數量, 新增數量
+end;
+
+
