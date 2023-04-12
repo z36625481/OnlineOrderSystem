@@ -1,0 +1,11 @@
+Flask
+flask_sqlalchemy
+sqlalchemy
+matplotlib
+Flask-Migrate
+Flask-SQLAlchemy
+flask_wtf
+psycopg2
+python-dotenv
+SQLAlchemy
+pymssql

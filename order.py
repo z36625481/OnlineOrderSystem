@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Mar 29 14:59:51 2023
-
-@author: DYH
-"""
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
@@ -11,12 +5,12 @@ import datetime
 import pyodbc
 import json
 
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=pyuser;PWD=1234567')
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=sa;PWD=1234')
 cursor = conn.cursor()
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = 'mssql+pymssql://pyuser:1234567@localhost:1433/Onlineordersys'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mssql+pymssql://sa:1234@localhost:1433/Onlineordersys'
 
 db = SQLAlchemy(app)
 
