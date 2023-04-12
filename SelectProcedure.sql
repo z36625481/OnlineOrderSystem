@@ -2,8 +2,8 @@ create or alter procedure SelectDishType
 as
 begin
 	SET NOCOUNT ON
-	select DishType from dbo.menu 
-	where DisherID in (select min(DisherID) from dbo.menu group by DishType)
+	select DishType from MenuType 
+	ORDER BY TypeID;
 	SET NOCOUNT OFF
 end
 go
@@ -14,8 +14,8 @@ begin
 	SET NOCOUNT ON
 	select dishes,
 		   price,
-		   DishType
-	from dbo.menu	
+		   t.DishType
+	from dbo.menu m join dbo.MenuType t on m.TypeID	= t.TypeID
 	SET NOCOUNT OFF
 end
 go
@@ -60,8 +60,7 @@ create or alter procedure SelectSideDish
 as
 begin
 	SET NOCOUNT ON	
-	select  SideDishID, 
-			dishes
+	select dishes
 	from MenuPlus p join MenuItems i on p.MenuItemsID = i.MenuItemsID
 	where i.items = '主食'
 	SET NOCOUNT OFF
@@ -101,5 +100,42 @@ begin
 	insert into [dbo].[OrderRecord](OrderNum, DisherID, Quantity, TableID) -- 新增 "訂單編號", "菜單編號", "數量", "桌號"
 	values(@OrderNum, @DisherID, @Quantity, @TableID)                    --要新增的訂單編號, 要新增的品項, 新增數量, 新增數量
 end;
+go
+
+create or alter procedure SelectMenuPlus
+as
+begin
+	SET NOCOUNT ON
+	select items from MenuItems	
+	SET NOCOUNT OFF
+end
+go
+
+create or alter procedure UpdateMenu
+@OirginalName  nvarchar(50),	  -- 舊的餐點名稱	
+@NewDisherName nvarchar(50),      -- 新的餐點名稱
+@NewPrice int					  -- 新的餐點價格
+as
+begin
+    update [dbo].[menu]               -- 將 menu 中的 
+    set dishes = @NewDisherName,      -- 菜單名稱更新為新的菜單名稱
+        price = @NewPrice             -- 價錢更新為新的價錢                   
+    where dishes = @OirginalName	  -- 哪一道菜的
+end;
+
+
+/*create or alter procedure SelectMenuPlus
+as
+begin
+	SET NOCOUNT ON
+	select *,
+		   i.items,
+		   p.dishes
+	from MenuPlus p join MenuItems i on p.MenuItemsID = i.MenuItemsID
+					join MenuChoose c on p.MenuItemsID = c.MenuItemsID	
+	SET NOCOUNT OFF
+end
+go*/
+
 
 

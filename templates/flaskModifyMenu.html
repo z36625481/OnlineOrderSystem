@@ -70,7 +70,7 @@
                   </div>
                 </div>  
                 <div class="col-md-2 my-auto">                                    
-                  <type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModal">修改</button>
+                  <type="button" class="btn btn-primary rounded-pill modifyButton" data-bs-toggle="modal" data-bs-target="#modifyModal" title={{item.0}} id={{item.1}}>修改</button>
                 </div>                 
               </div>
             </div>
@@ -86,60 +86,72 @@
       </div>            
     </div>
     
-    <!-- modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- modify modal -->
+    <form class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">品項修改</h5>
+            <h5 class="modal-title" id="modifyModalLabel" name="originalName">品項修改</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <form>
               <div class="mb-3">
-                <label for="exampleInputNum" class="form-label">品項名稱</label>
-                <input type="text" class="form-control" id="itemName">                
+                <label for="modifyNameID" class="form-label">品項名稱</label>
+                <input type="text" class="form-control" id="modifyNameID" name="modifyName">                
               </div>
               <div class="mb-3">
-                <label for="exampleInputNum" class="form-label">價格</label>
-                <input type="text" class="form-control" id="itemName">                
+                <label for="modifyPriceID" class="form-label">價格</label>
+                <input type="text" class="form-control" id="modifyPriceID" name="modifyPrice">                
               </div>
+              {% for choice in choose %}
               <div class="mb-3">
-                <div>
-                  <label for="exampleInputSoup" class="form-label">能不能決定乾湯</label>
-                </div>
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-                  <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
+                  <label for={{choice.0}} class="form-label">能不能決定{{choice.0}}</label>
+                  <input class="form-check-input" type="checkbox" id={{choice.0}} checked>                  
                 </div>
               </div>
-              <div class="mb-3">
-                <div>
-                  <label for="exampleInputSoup" class="form-label">能不能決定份量</label>
-                </div>
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-                  <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div>
-                  <label for="exampleInputSoup" class="form-label">能不能決定主食</label>
-                </div>
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-                  <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
-                </div>
-              </div>                
+              {% endfor %}                
             </form>            
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary rounded-pill">確認</button>
+            <button type="submit" class="btn btn-primary rounded-pill" id="modifyCheck">確認</button>
             <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">關閉</button>            
           </div>
         </div>
       </div>
-    </div>  
+    </form>
+    <!-- inner script --> 
+    <script>
+      const modifyButton = document.querySelectorAll('.modifyButton');
+      const modifyModal = document.getElementById('modifyModal');
+      const modifyName = document.getElementById('modifyNameID');
+      const modifyPrice = document.getElementById('modifyPriceID');
+      const modifyCheck = document.getElementById('modifyCheck');
+      const originalName = document.getElementById('originalName')
+        
+      window.addEventListener('load', function (){ 
+          modifyModal.addEventListener('show.bs.modal', function(e){        
+              let btn = e.relatedTarget;
+              originalName.value = btn.title;                                      
+              modifyName.value = btn.title;                                          
+              modifyPrice.value = btn.id;
+          })
+
+          modifyCheck.addEventListener('click', function(){
+              alert('修改餐點資訊成功！'); 
+              window.location.href = window.location.href;     
+          })
+      })
+
+      
+        /*for(let i=0; i<modifyButton.length; i++){
+          modifyButton[i].index = i;
+          modifyButton[i].onclick = function(){
+            console.log('1')            
+          }
+        };*/ 
+    </script>  
     <script src="../static/scripts/popper.min.js"></script>
     <script src="../static/scripts/bootstrap.min.js"></script>
   </body>

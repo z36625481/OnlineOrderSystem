@@ -1,11 +1,16 @@
 -- create database Onlineordersys
 -- drop database Onlineordersys
 use Onlineordersys
-
-
--- delete from menu
 /*
+USE master
+GO
+ALTER AUTHORIZATION ON DATABASE::Onlineordersys TO pyuser
+
+delete from menu
+
 select * from menu
+go
+select * from MenuType
 go
 select * from MenuItems
 go
@@ -19,6 +24,8 @@ select * from OrderMeterial
 go
 select * from OrderRecord 
 go
+select * from staff
+go
 select * from OrderMeterial where PayTime is null
 go
 select * from OrderMeterial a join OrderRecord b on a.OrderNum = b.OrderNum 
@@ -26,16 +33,12 @@ where a.PayTime is null
 go
 select * from OrderMeterial a join OrderRecord b on a.OrderNum = b.OrderNum 
 go
-select * from staff
-go
-select * from MenuType
 */
 -- 分類
 create table MenuType(
     TypeID int primary key identity not null , -- 類型ID
     DishType nvarchar(50) unique not null-- 什麼類型
     )
-    
 
 --菜單
 create table menu(
@@ -64,24 +67,15 @@ create table MenuPlus(
 
 -- 菜單品項關聯 (A 料理對應到 B 類型)
 create table MenuChoose(
-    DisherID int foreign key references menu(DisherID) on delete cascade not null,       -- 什麼樣的料理
+    TypeID int foreign key references MenuType(TypeID) on delete cascade not null,       -- 什麼樣的料理
     MenuItemsID int foreign key references MenuItems(MenuItemsID) on delete cascade　null -- 會有甚麼樣的類型選擇
     )
-
   
 -- 座位
 create table seat(
     TableID int primary key  not null,  -- 桌號(ID)
     seat int not null,   -- 位子數量
     )
-
--- 客人
-create table customer(
-    UserID int primary key identity not null, -- ID (用於判斷
-	UserName nvarchar(50) not null,           -- 暱稱
-	Email nvarchar(50)  unique not null,      -- 帳號(E-mail)
-	PW nvarchar(50) not null                  -- 密碼                     
-	)
 
 -- 員工
 create table staff(
@@ -97,9 +91,7 @@ create table OrderMeterial(
     OrderTime datetime not null, -- 點餐時間
     PayTime datetime null,       -- 結帳時間
     TableID int foreign key references seat(TableID) not null, -- 參考桌號
-    UserID int foreign key references  customer(UserID) on delete cascade not null
     )
-    
 
 -- 訂單明細
 create table OrderRecord(

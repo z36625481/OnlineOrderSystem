@@ -11,12 +11,12 @@ from flask import render_template
 import datetime
 import pyodbc
 
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=pyuser;PWD=1234567')
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=sa;PWD=1234')
 cursor = conn.cursor()
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = 'mssql+pymssql://pyuser:1234567@localhost:1433/Onlineordersys'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mssql+pymssql://sa:1234@localhost:1433/Onlineordersys'
 
 db = SQLAlchemy(app)
 
@@ -29,26 +29,27 @@ def index():
     return '資料庫連線成功'
 
 @app.route('/modifyMenu', methods=['GET', 'POST'])
-def modifyMenu():
-    '''
-        if request.method == 'POST':
-        payTime = (datetime.datetime.now())
-        payTimeStr = payTime.strftime("%Y-%m-%d %H:%M:%S")
-        orderNum = int(request.values['checkNum'])
+def modifyMenu():    
+    if request.method == 'POST':
+        originalName = request.values['originalName']
+        modifyName = request.values['modifyName']
+        modifyPrice = int(request.values['modifyPrice'])
         try:
-            sql = (f"execute UpdatePayTime {orderNum}, '{payTimeStr}'")
+            sql = (f"execute UpdateMenu '{originalName}', '{modifyName}','{modifyPrice}'")
             cursor.execute(sql)
             conn.commit()
         except Exception as err:
             raise err
         finally:            
             cleanup(db.session)
-    '''                       
+                           
     try:
         sql = "execute SelectDishType"
         DishType = db.engine.execute(sql)
         sql = "execute SelectMenu"
-        menu = db.engine.execute(sql)        
+        menu = db.engine.execute(sql)
+        sql = "execute SelectMenuPlus"
+        choose = db.engine.execute(sql)        
     except Exception as err:
         raise err
     finally:
@@ -58,7 +59,8 @@ def modifyMenu():
     menu = list(menu)
                 
     return render_template("flaskModifyMenu.html", **locals())
-
+    conn.close()
+    
 @app.route('/insertMenu', methods=['GET', 'POST'])
 def insertMenu():
     '''
@@ -155,4 +157,4 @@ def analyze():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port="50002")

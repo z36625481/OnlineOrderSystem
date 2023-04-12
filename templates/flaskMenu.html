@@ -54,7 +54,11 @@
             {% endfor %}
             </ul>
           </div>
-    <!-- menu -->        
+    <!-- menu -->
+        
+
+    <img src="http://www.funcode-tech.com/Encoder_Service/img.aspx?
+    custid=1&username=public&codetype=QR&EClevel=0&data=http://127.0.0.1:5000" width="300"/>
         <div class="col-12 col-md-10 flex-column mb-3">
           {% for type in DishType %}
           <div class="categorylabel border border-info mb-3 rounded" id={{type.0}}>
@@ -102,6 +106,12 @@
           <div class="modal-body" id="cartModalBody">                        
           </div>
           <div class="modal-footer justify-content-center">
+            <div class="mb-3 row">
+              <label for="totalID" class="col-md-4 col-form-label">總計：</label>
+              <div class="col-md-8">
+                <input type="text" readonly class="form-control-plaintext text-info" id="totalID" name="total">
+              </div>
+            </div>
             <div class="tableList">
               <select class="form-select" aria-label="Default select example" name="tableID" required>
                 <option selected value="">請選擇桌號</option>
@@ -153,6 +163,7 @@
       const cartModal = document.getElementById('cartModal')
       const cartModalBody = document.getElementById('cartModalBody')
       const submitCart = document.getElementById('submitCart')
+      const totalPrice = document.getElementById('totalID')
            
       const cartList = []      
       const inputQuantity = 
@@ -170,35 +181,35 @@
               <label for="exampleInputSoup" class="form-label">乾麵或湯麵</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="nosoup">
-              <label class="form-check-label" for="inlineCheckbox1">乾麵</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="soup">
+              <input class="form-check-input" type="radio" name="noodleType" id="soup" value="soup" checked>
               <label class="form-check-label" for="inlineCheckbox2">湯麵</label>
             </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="noodleType" id="nosoup" value="nosoup">
+              <label class="form-check-label" for="inlineCheckbox1">乾麵</label>
+            </div>            
           </div>
           <div class="mb-3">
             <div>
               <label for="exampleInputSoup" class="form-label">需不需要加大</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio11" value="big">
-              <label class="form-check-label" for="inlineCheckbox1">需要</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions1" id="inlineRadio12" value="normal">
+              <input class="form-check-input" type="radio" name="sizeType" id="normal" value="normal" checked>
               <label class="form-check-label" for="inlineCheckbox2">不需要</label>
             </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="sizeType" id="big" value="big">
+              <label class="form-check-label" for="inlineCheckbox1">需要</label>
+            </div>            
           </div>
       `
       const hotpotModal = inputQuantity + 
       `          
           <div class="mb-3">
             <label for="selectDish" class="form-label">選擇主食</label>
-            <select class="form-select" aria-label="Default select example" id="selectDish">            
+            <select class="form-select" aria-label="Default select example" id="selectDish" name="dishID">            
             {% for dish in sideDish %}
-              <option value={{dish.0}} name="dishID">{{dish.1}}</option>
+              <option value={{dish.0}}>{{dish.0}}</option>
             {% endfor %}
             </select>
           </div>     
@@ -216,11 +227,13 @@
       ` 
       function render() {        
           let htmlStr = ''
+          let total = 0
 
           if (cartList.length == 0){
               cartModalBody.innerHTML = defaultCart
           }else{
-            cartList.forEach(function (item) {            
+            cartList.forEach(function (item) {
+              total += (item.price * item.itemQuantity)            
               htmlStr = htmlStr + 
               `
                 <div class="card mb-3">
@@ -259,8 +272,10 @@
             alert('已取消此商品');
             render();              
           }
-        };
-        submitCart.value = JSON.stringify(cartList);            
+        };        
+        submitCart.value = JSON.stringify(cartList);
+        totalPrice.textContent = total;
+        totalPrice.value = total;            
       }
       
       window.addEventListener('load', function (){ 
@@ -280,14 +295,25 @@
           })
       
           submitCheck.addEventListener('click', function(){
-              const itemQuantity = document.getElementById('itemQuantity')              
-              cartList.unshift({
-                name: itemName.value,
-                itemQuantity: itemQuantity.value,
-                price: itemPrice.value
-              });
-              render();
-              alert('已加入購物車');                                                                                                              
+              const itemQuantity = document.getElementById('itemQuantity')
+              const existName = cartList.find(item => item.name === itemName.value);
+              if (!existName){
+                cartList.unshift({
+                  name: itemName.value,
+                  itemQuantity: itemQuantity.value,
+                  price: itemPrice.value
+                });
+                alert('已加入購物車');
+              }else{
+                existName.itemQuantity = Number(existName.itemQuantity)
+                if ((existName.itemQuantity + Number(itemQuantity.value)) < 10){
+                  existName.itemQuantity += Number(itemQuantity.value); 
+                  alert('已加入購物車');                 
+                }else{                
+                  alert('單品總數量最高為10，如有需求歡迎來電洽詢！');
+                }
+              }      
+              render();                                                                                                    
           })    
           
           cartModal.addEventListener('show.bs.modal', function () {        

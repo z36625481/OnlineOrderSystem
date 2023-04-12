@@ -27,6 +27,7 @@ def menu():
     if request.method == 'POST':        
         cartListStr = request.form['cartList']
         tableID = int(request.form['tableID'])
+        total = int(request.form['total'])
         cartList = json.loads(cartListStr)      
         orderTime = (datetime.datetime.now())
         orderTimeStr = orderTime.strftime("%Y-%m-%d %H:%M:%S")
@@ -39,24 +40,20 @@ def menu():
         try:        
             sql = "execute SelectOrderNum"
             orderNum = cursor.execute(sql)
-            orderNum = cursor.fetchone()[0]            
-            print(orderNum, type(orderNum))
-            for cart in cartList:                
+            orderNum = cursor.fetchone()[0] 
+            for cart in cartList:
                 sql = f"select DisherID from menu where dishes = '{cart['name']}'"
                 disherID = cursor.execute(sql)
-                disherID = cursor.fetchone()[0]                
-                print(disherID, type(disherID))
-                quantity = int(cart['itemQuantity'])
-                print(quantity, type(quantity))
-                print(tableID, type(tableID))
+                disherID = cursor.fetchone()[0]
+                quantity = int(cart['itemQuantity'])                
                 sql = f"execute InsertOrderRecord {orderNum}, {disherID}, {quantity}, {tableID}"
-                cursor.execute(sql)                    
+                cursor.execute(sql)
         except Exception as err:
             raise err
         finally:
             conn.commit()            
             cleanup(db.session)
-        return 'OK'
+        return render_template("flaskOrder.html", orderNum=orderNum, cartList=cartList, tableID=tableID, total=total)
         conn.close()
                        
     try:
@@ -81,15 +78,6 @@ def menu():
 
 @app.route('/checkorder')
 def checkorder():
-    try:
-        sql = "execute SelectOrder"
-        orders = db.engine.execute(sql)              
-    except Exception as err:
-        raise err
-    finally:
-        cleanup(db.session)
-        
-    orders = list(orders)    
     return render_template("flaskOrder.html", **locals())
     
 if __name__ == "__main__":    

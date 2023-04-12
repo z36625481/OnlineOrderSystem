@@ -19,20 +19,8 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">              
               <li class="nav-item">
-                <a class="nav-link" href="{{url_for('menu')}}">我要點餐</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">目前訂單狀況</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  關於我們
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                  <li><a class="dropdown-item" href="#"><img src="../static/images/dish.png" class="decorate">&nbsp店家資訊</a></li>
-                  <li><a class="dropdown-item" href="https://pse.is/4vwlwk" target="_blank"><img src="../static/images/facebook.png" class="decorate">&nbspFB粉絲團</a></li>
-                </ul>
-              </li>              
+                <a class="nav-link" href="{{url_for('menu')}}">返回點餐頁面</a>
+              </li>                            
             </ul>            
           </div>
         </div>
@@ -43,31 +31,40 @@
       </div>
     <!-- table -->
     <div class="container mt-3">
-      <div class="categorylabel border border-info mb-3 rounded">
-        <div class="ordertext">            
-          <h4>目前尚未結帳訂單</h4>
+      <div class="border border-info mb-3 rounded">
+        <div class="orderHeader ordertext text-info">            
+          <h4>訂單編號：{{orderNum}}</h4>
         </div>  
       </div>  
       <table class="table">
         <thead>
-          <tr>
-            <th scope="col">訂單編號</th>
-            <th scope="col">訂單時間</th>
-            <th scope="col">桌號</th>
-            <th scope="col">金額</th>
+          <tr>            
+            <th scope="col">餐點名稱</th>
+            <th scope="col">價格</th>
+            <th scope="col">數量</th>
           </tr>
         </thead>
         <tbody>
-          {% for item in orders%}  
+          {% for item in cartList%}  
           <tr>
-            <th scope="row">{{item.0}}</th>
-            <td>{{item.1}}</td>
-            <td>{{item.2}}</td>
-            <td>{{item.3}}</td>            
+            <th scope="row">{{item.name}}</th>
+            <td>{{item.price}}</td>
+            <td>{{item.itemQuantity}}</td>                       
           </tr>
           {% endfor %}
         </tbody>
       </table>
+      <div class="border border-info mb-3 rounded row">
+        <div class="orderFooter col-12 col-md-6 ordertext text-info">
+            <h4>桌號：{{tableID}}</h4>
+        </div>
+        <div class="orderFooter col-12 col-md-6 ordertext text-info">
+          <h4>總計：{{total}}元</h4>
+        </div>
+      </div>
+      <div class="container mt-3 text-danger ordertext">
+        <p>建議保留此頁面或截圖，以便跟櫃台人員取餐！</p>
+      </div>
     </div>    
     <script src="../static/scripts/popper.min.js"></script>
     <script src="../static/scripts/bootstrap.min.js"></script>

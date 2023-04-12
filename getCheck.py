@@ -11,12 +11,12 @@ from flask import render_template
 import datetime
 import pyodbc
 
-conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=pyuser;PWD=1234567')
+conn = pyodbc.connect('DRIVER={SQL Server};SERVER=localhost;DATABASE=Onlineordersys;UID=sa;PWD=1234')
 cursor = conn.cursor()
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = 'mssql+pymssql://pyuser:1234567@localhost:1433/Onlineordersys'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mssql+pymssql://sa:1234@localhost:1433/Onlineordersys'
 
 db = SQLAlchemy(app)
 
@@ -55,4 +55,4 @@ def getCheck():
     conn.close()
     
 if __name__ == "__main__":
-    app.run()
+    app.run(port="50001")
