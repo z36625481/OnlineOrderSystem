@@ -3,16 +3,16 @@
   <head>    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">  
-    <link rel='shortcut icon' href='../static/images/menu.ico' type='image/x-icon'>
-    <link rel="stylesheet" href="../static/styles/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="../static/styles/order.css" type="text/css">
+    <link rel='shortcut icon' href='../../static/images/menu.ico' type='image/x-icon'>
+    <link rel="stylesheet" href="../../static/styles/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="../../static/styles/order.css" type="text/css">
     <title>老哥麵店</title>             
   </head>
   <body>
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" herf="#"><img src="../static/images/menu.png" class="decorate">&nbsp老哥麵店</a>
+          <a class="navbar-brand" herf="#"><img src="../../static/images/menu.png" class="decorate">&nbsp老哥麵店&nbsp訂單編號：{{thisOrderNum}}</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -29,12 +29,12 @@
                   關於我們
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                  <li><a class="dropdown-item" href="#"><img src="../static/images/dish.png" class="decorate">&nbsp店家資訊</a></li>
-                  <li><a class="dropdown-item" href="https://pse.is/4vwlwk" target="_blank"><img src="../static/images/facebook.png" class="decorate">&nbspFB粉絲團</a></li>
+                  <li><a class="dropdown-item" href="#"><img src="../../static/images/dish.png" class="decorate">&nbsp店家資訊</a></li>
+                  <li><a class="dropdown-item" href="https://pse.is/4vwlwk" target="_blank"><img src="../../static/images/facebook.png" class="decorate">&nbspFB粉絲團</a></li>
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal"><img src="../static/images/cart.png" class="decorate">購物車</a> 
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal"><img src="../../static/images/cart.png" class="decorate">購物車</a> 
               </li>              
             </ul>            
           </div>
@@ -42,8 +42,8 @@
       </nav>
     <!-- banner -->
       <div class="banner overflow-hidden d-none d-md-block">
-        <img src="../static/images/banner2.jpg" class="w-100 h-100">
-      </div>  
+        <img src="../../static/images/banner2.jpg" class="w-100 h-100">
+      </div>      
     <!-- categorylist -->
       <div class="container mt-3">
         <div class="row">
@@ -52,13 +52,9 @@
             {% for items in DishType %}
             <li class="list-group-item"><a href="#{{items.0}}" class="category-list-item">{{items.0}}</a></li>
             {% endfor %}
-            </ul>
+            </ul>            
           </div>
     <!-- menu -->
-        
-
-    <img src="http://www.funcode-tech.com/Encoder_Service/img.aspx?
-    custid=1&username=public&codetype=QR&EClevel=0&data=http://127.0.0.1:5000" width="300"/>
         <div class="col-12 col-md-10 flex-column mb-3">
           {% for type in DishType %}
           <div class="categorylabel border border-info mb-3 rounded" id={{type.0}}>
@@ -81,7 +77,7 @@
                 </div>  
                 <div class="col-md-2">
                   <div class="card-img mt-1" >                  
-                    <button class="btn" data-bs-toggle="modal" data-bs-target="#itemsModal" id={{item.0}} title={{item.2}} value={{item.1}}><img src="../static/images/add.png" class="decorate"></button>                  
+                    <button class="btn" data-bs-toggle="modal" data-bs-target="#itemsModal" id={{item.0}} title={{item.2}} value={{item.1}}><img src="../../static/images/add.png" class="decorate"></button>                  
                   </div>                 
                 </div>                 
               </div>
@@ -112,14 +108,12 @@
                 <input type="text" readonly class="form-control-plaintext text-info" id="totalID" name="total">
               </div>
             </div>
-            <div class="tableList">
-              <select class="form-select" aria-label="Default select example" name="tableID" required>
-                <option selected value="">請選擇桌號</option>
-                {% for table in tables %}
-                  <option value={{table.0}}>{{table.0}}</option>
-                {% endfor %}
-              </select>
-            </div>  
+            <div class="mb-3 row">
+              <label for="tableID" class="col-md-4 col-form-label">桌號：</label>
+              <div class="col-md-8">
+                <input type="text" readonly class="form-control-plaintext text-info" value={{thisTableID}}>
+              </div>
+            </div>
             <button type="submit" class="btn btn-warning rounded-pill" id="submitCart" name="cartList">確認訂單</button>                        
           </div>
         </div>
@@ -164,14 +158,12 @@
       const cartModalBody = document.getElementById('cartModalBody')
       const submitCart = document.getElementById('submitCart')
       const totalPrice = document.getElementById('totalID')
-           
       const cartList = []      
       const inputQuantity = 
       `
           <div class="mb-3">
             <label for="itemQuantity" class="form-label">輸入數量</label>
             <input type="number" id="itemQuantity" name="inputNum" min="1" max="10" value="1"/>
-            <div id="help" class="form-text">如有大量需求(10碗以上)，請先來電詢問是否有充足備料</div>
           </div>
       `   
       const noodlesModal = inputQuantity + 
@@ -218,7 +210,7 @@
       `
           <div class="row">
             <div class="col-md-4 offset-md-4">
-              <img src="../static/images/noItems.jpg" class="cartImg">
+              <img src="../../static/images/noItems.jpg" class="cartImg">
             </div>
           </div>
           <div id="modal-body-text">              
@@ -227,7 +219,7 @@
       ` 
       function render() {        
           let htmlStr = ''
-          let total = 0
+          let total = 0          
 
           if (cartList.length == 0){
               cartModalBody.innerHTML = defaultCart
@@ -278,7 +270,7 @@
         totalPrice.value = total;            
       }
       
-      window.addEventListener('load', function (){ 
+      window.addEventListener('load', function (){
           itemsModal.addEventListener('show.bs.modal', function (e) {        
               let btn = e.relatedTarget;                        
               itemName.textContent = btn.id;
@@ -306,32 +298,27 @@
                 alert('已加入購物車');
               }else{
                 existName.itemQuantity = Number(existName.itemQuantity)
-                if ((existName.itemQuantity + Number(itemQuantity.value)) < 10){
-                  existName.itemQuantity += Number(itemQuantity.value); 
-                  alert('已加入購物車');                 
-                }else{                
-                  alert('單品總數量最高為10，如有需求歡迎來電洽詢！');
-                }
+                existName.itemQuantity += Number(itemQuantity.value); 
+                alert('已加入購物車'); 
               }      
               render();                                                                                                    
           })    
           
-          cartModal.addEventListener('show.bs.modal', function () {        
+          cartModal.addEventListener('show.bs.modal', function () {
               if (cartList.length == 0){
                 cartModalBody.innerHTML = defaultCart
-              }
+              };              
           })
 
           submitCart.addEventListener('click', function(){
               if (cartList.length == 0){
                 alert('尚未選購商品！');
-                window.location.href = window.location.href;
-              }
-                                                                                                                            
+                window.history.back();
+              }                                                                                                                            
           })
       })
     </script>
-    <script src="../static/scripts/popper.min.js"></script>  
-    <script src="../static/scripts/bootstrap.min.js"></script>    
+    <script src="../../static/scripts/popper.min.js"></script>  
+    <script src="../../static/scripts/bootstrap.min.js"></script>    
   </body>
 </html>

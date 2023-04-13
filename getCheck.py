@@ -26,8 +26,43 @@ def cleanup(session):
      
 @app.route('/')
 def index():
-    return '資料庫連線成功'
+    return 'log in'
 
+@app.route('/createOrder', methods=['GET', 'POST'])
+def createOrder():
+    if request.method == 'POST':
+        tableID = int(request.values['tableID'])
+        orderTime = (datetime.datetime.now())
+        orderTimeStr = orderTime.strftime("%Y-%m-%d %H:%M:%S")        
+        try:
+            sql = (f"execute InsertOrderMeterial '{orderTimeStr}', {tableID}")
+            cursor.execute(sql)
+            conn.commit()            
+        except Exception as err:
+            raise err
+        try:        
+            sql = "execute SelectOrderNum"
+            orderNum = cursor.execute(sql)
+            orderNum = cursor.fetchone()[0]
+        except Exception as err:
+            raise err
+        finally:            
+            cleanup(db.session)
+            
+        return render_template("flaskCreateQRcode.html", tableID=tableID, orderNum=orderNum)                        
+    try:
+        sql = "select TableID from seat"
+        tables = db.engine.execute(sql)              
+    except Exception as err:
+        raise err
+    finally:
+        cleanup(db.session)
+        
+    tables = list(tables)
+    
+    return render_template("flaskCreateOrder.html", **locals())
+    conn.close()
+    
 @app.route('/getCheck', methods=['GET', 'POST'])
 def getCheck():
     if request.method == 'POST':

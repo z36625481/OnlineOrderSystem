@@ -22,38 +22,37 @@ def cleanup(session):
 def index():
     return '資料庫連線成功'
 
-@app.route('/menu', methods=['GET', 'POST'])
-def menu():      
-    if request.method == 'POST':        
-        cartListStr = request.form['cartList']
-        tableID = int(request.form['tableID'])
+@app.route('/menu/<int:thisOrderNum>/<int:thisTableID>', methods=['GET', 'POST'])
+def menu(thisOrderNum, thisTableID):      
+    if request.method == 'POST':              
+        cartListStr = request.form['cartList']        
         total = int(request.form['total'])
-        cartList = json.loads(cartListStr)      
-        orderTime = (datetime.datetime.now())
-        orderTimeStr = orderTime.strftime("%Y-%m-%d %H:%M:%S")
-        try:        
-            sql = f"execute InsertOrderMeterial '{orderTimeStr}', {tableID}"
-            cursor.execute(sql)
-            conn.commit()
-        except Exception as err:
-            raise err
-        try:        
-            sql = "execute SelectOrderNum"
-            orderNum = cursor.execute(sql)
-            orderNum = cursor.fetchone()[0] 
+        cartList = json.loads(cartListStr) 
+        try:            
             for cart in cartList:
                 sql = f"select DisherID from menu where dishes = '{cart['name']}'"
-                disherID = cursor.execute(sql)
+                cursor.execute(sql)
                 disherID = cursor.fetchone()[0]
                 quantity = int(cart['itemQuantity'])                
-                sql = f"execute InsertOrderRecord {orderNum}, {disherID}, {quantity}, {tableID}"
+                sql = f"execute InsertOrderRecord {thisOrderNum}, {disherID}, {quantity}, {thisTableID}"
                 cursor.execute(sql)
+                conn.commit()
         except Exception as err:
             raise err
-        finally:
-            conn.commit()            
-            cleanup(db.session)
-        return render_template("flaskOrder.html", orderNum=orderNum, cartList=cartList, tableID=tableID, total=total)
+        try:            
+            sql = f"execute SelectCartList {thisOrderNum}"
+            sumCartList = db.engine.execute(sql)
+            sql = f"execute calTotal {thisOrderNum}"
+            cursor.execute(sql)
+            sumTotal = cursor.fetchone()[0]
+        except Exception as err:
+            raise err
+        finally:       
+            cleanup(db.session)  
+        
+        sumCartList =list(sumCartList)
+        
+        return render_template("flaskOrder.html", orderNum=thisOrderNum, cartList=sumCartList, tableID=thisTableID, total=sumTotal)
         conn.close()
                        
     try:
@@ -76,7 +75,7 @@ def menu():
     return render_template("flaskMenu.html", **locals())
     conn.close()
 
-@app.route('/checkorder')
+@app.route('/checkOrder')
 def checkorder():
     return render_template("flaskOrder.html", **locals())
     
