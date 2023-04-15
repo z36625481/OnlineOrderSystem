@@ -22,7 +22,7 @@
                 <a class="nav-link" href="#">我要點餐</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{url_for('checkorder')}}">目前訂單狀況</a>
+                <a class="nav-link" href="{{url_for('checkorder', thisOrderNum=thisOrderNum, thisTableID=thisTableID, thisToken=thisToken)}}">目前訂單狀況</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -201,7 +201,7 @@
             <label for="selectDish" class="form-label">選擇主食</label>
             <select class="form-select" aria-label="Default select example" id="selectDish" name="dishID">            
             {% for dish in sideDish %}
-              <option value={{dish.0}}>{{dish.0}}</option>
+              <option value={{dish.1}}>{{dish.1}}</option>
             {% endfor %}
             </select>
           </div>     

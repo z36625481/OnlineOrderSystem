@@ -43,6 +43,15 @@ def painting(sql):
     plt.savefig('C:/Users/DYH/Desktop/OnlineOrderSystem/OnlineOrderSystem/static/images/compare.png')
     return Meterial
 
+def tryAccount(account, pwd):
+    try:
+        sql = f"select count(*) from staff where Email = '{account}' and PW = '{pwd}'"
+        result = db.engine.execute(sql).scalar()
+    except:
+        return render_template("flaskLoginError.html")
+    return result    
+   
+    
 data = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 
@@ -52,26 +61,27 @@ def login():
     if request.method == 'POST':
         account = request.form["account"]
         pwd = request.form["pwd"]
-        try:
-            sql = f"select count(*) from staff where Email = '{account}' and PW = '{pwd}'"
-            result = db.engine.execute(sql).scalar()
-        except Exception as err:
-            raise err
+        result = tryAccount(account, pwd)
         if result is None or result == 0:
             return render_template("flaskLoginError.html")
-        else:
+        try:
             sql = f"select personnel from staff where Email = '{account}'"
             cursor.execute(sql)
             personnel = cursor.fetchone()[0]
-            if (personnel == 'Boss'):
-                return redirect(url_for('modifyMenu'))
-            elif personnel == 'Staff':
-                return redirect(url_for('createOrder'))
-   
+        except Exception as err:
+            raise err
+        if (personnel == 'Boss'):
+            return redirect(url_for('modifyMenu', thisAccount=account, thispwd=pwd))
+        elif personnel == 'Staff':
+            return redirect(url_for('createOrder', thisAccount=account, thispwd=pwd))
+
     return render_template("flaskLogin.html")
 
-@app.route('/createOrder', methods=['GET', 'POST'])
-def createOrder():
+@app.route('/createOrder/<string:thisAccount>/<string:thispwd>', methods=['GET', 'POST'])
+def createOrder(thisAccount, thispwd):
+    result = tryAccount(thisAccount, thispwd)
+    if result is None or result == 0:
+        return render_template("flaskLoginError.html")
     if request.method == 'POST':
         tableID = int(request.values['tableID'])
         orderTime = (datetime.datetime.now())
@@ -94,7 +104,7 @@ def createOrder():
         finally:            
             cleanup(db.session)
             
-        return render_template("flaskCreateQRcode.html", tableID=tableID, orderInfo=orderInfo)                        
+        return render_template("flaskCreateQRcode.html", tableID=tableID, orderInfo=orderInfo, thisAccount=thisAccount, thispwd=thispwd)                        
     try:
         sql = "select TableID from seat"
         tables = db.engine.execute(sql)              
@@ -108,8 +118,11 @@ def createOrder():
     return render_template("flaskCreateOrder.html", **locals())
     conn.close()
     
-@app.route('/getCheck', methods=['GET', 'POST'])
-def getCheck():
+@app.route('/getCheck/<string:thisAccount>/<string:thispwd>', methods=['GET', 'POST'])
+def getCheck(thisAccount, thispwd):
+    result = tryAccount(thisAccount, thispwd)
+    if result is None or result == 0:
+        return render_template("flaskLoginError.html")
     if request.method == 'POST':
         payTime = (datetime.datetime.now())
         payTimeStr = payTime.strftime("%Y-%m-%d %H:%M:%S")
@@ -134,8 +147,11 @@ def getCheck():
     return render_template("flaskGetCheck.html", **locals())
     conn.close()
 
-@app.route('/modifyMenu', methods=['GET', 'POST'])
-def modifyMenu():    
+@app.route('/modifyMenu/<string:thisAccount>/<string:thispwd>', methods=['GET', 'POST'])
+def modifyMenu(thisAccount, thispwd): 
+    result = tryAccount(thisAccount, thispwd)
+    if result is None or result == 0:
+        return render_template("flaskLoginError.html")
     if request.method == 'POST':
         originalName = request.values['originalName']
         modifyName = request.values['modifyName']
@@ -144,7 +160,7 @@ def modifyMenu():
             sql = (f"execute UpdateMenu '{originalName}', '{modifyName}','{modifyPrice}'")
             cursor.execute(sql)            
         except:
-            return render_template("flaskInsertError.html")
+            return render_template("flaskInsertError.html", **locals())
         finally: 
             conn.commit()
             cleanup(db.session)
@@ -167,8 +183,11 @@ def modifyMenu():
     return render_template("flaskModifyMenu.html", **locals())
     conn.close()
     
-@app.route('/insertMenu', methods=['GET', 'POST'])
-def insertMenu():
+@app.route('/insertMenu/<string:thisAccount>/<string:thispwd>', methods=['GET', 'POST'])
+def insertMenu(thisAccount, thispwd):
+    result = tryAccount(thisAccount, thispwd)
+    if result is None or result == 0:
+        return render_template("flaskLoginError.html")
     if request.method == 'POST':
         insertName = request.values['insertName']
         insertPrice = request.values['insertPrice']
@@ -177,7 +196,7 @@ def insertMenu():
             sql = (f"execute InsertMenu '{insertName}', '{insertPrice}','{typeID}'")
             cursor.execute(sql)            
         except:
-            return render_template("flaskInsertError.html")
+            return render_template("flaskInsertError.html", **locals())
         finally:
             conn.commit()            
             cleanup(db.session)
@@ -196,9 +215,11 @@ def insertMenu():
             
     return render_template("flaskInsertMenu.html", **locals()) 
 
-@app.route('/analyze', methods=['GET', 'POST'])
-def analyze():
-    
+@app.route('/analyze/<string:thisAccount>/<string:thispwd>', methods=['GET', 'POST'])
+def analyze(thisAccount, thispwd):
+    result = tryAccount(thisAccount, thispwd)
+    if result is None or result == 0:
+        return render_template("flaskLoginError.html")
     if request.method == 'POST':
         T = ""
         Y = request.values['year']
@@ -210,56 +231,60 @@ def analyze():
                 sql = f"Execute calRevenue {Y}"
                 Meterial = painting(sql)                
             except:
-                return render_template('flaskAnalyzeError.html')
+                return render_template('flaskAnalyzeError.html', **locals())
         elif (D == ""):
             try:
                 sql = f"Execute calRevenue {Y}, {M} "
                 Meterial = painting(sql)                
             except:
-                return render_template('flaskAnalyzeError.html')
+                return render_template('flaskAnalyzeError.html', **locals())
         elif (M == "" and D != ""):
-            return render_template('flaskAnalyzeError.html')
+            return render_template('flaskAnalyzeError.html', **locals())
         else:            
             try:
                 sql = f"Execute calRevenue {Y}, {M}, {D} "
                 Meterial = painting(sql)
             except:
-                return render_template('flaskAnalyzeError.html')      
+                return render_template('flaskAnalyzeError.html', **locals())      
             
         
         return render_template('flaskAnalyzeResult.html', **locals())                       
                       
-    return render_template("flaskAnalyze.html")
+    return render_template("flaskAnalyze.html", **locals())
 
-@app.route('/analyzeDetail')
-def analyzeDetail():
-        T = request.args.get('type')
-        Y = request.args.get('year')
-        M = request.args.get('month')
-        D = request.args.get('day')
+@app.route('/analyzeDetail/<string:thisAccount>/<string:thispwd>')
+def analyzeDetail(thisAccount, thispwd):
+    result = tryAccount(thisAccount, thispwd)
+    if result is None or result == 0:
+        return render_template("flaskLoginError.html")
+    
+    T = request.args.get('type')
+    Y = request.args.get('year')
+    M = request.args.get('month')
+    D = request.args.get('day')
 
-        if (M == "" and D == ""):
-            try:
-                sql = f"Execute calRevenueDetail {T}, {Y}"
-                Meterial = painting(sql)                
-            except:
-                return render_template('flaskAnalyzeError.html')
-        elif (D == ""):
-            try:
-                sql = f"Execute calRevenueDetail {T}, {Y}, {M} "
-                Meterial = painting(sql)                
-            except:
-                return render_template('flaskAnalyzeError.html')
-        elif (M == "" and D != ""):
+    if (M == "" and D == ""):
+        try:
+            sql = f"Execute calRevenueDetail {T}, {Y}"
+            Meterial = painting(sql)                
+        except:
             return render_template('flaskAnalyzeError.html')
-        else:            
-            try:
-                Meterial = painting(sql)
-                sql = f"Execute calRevenueDetail {T}, {Y}, {M}, {D} "                
-            except:
-                return render_template('flaskAnalyzeError.html')  
-       
-        return render_template('flaskAnalyzeResult.html', **locals())  
+    elif (D == ""):
+        try:
+            sql = f"Execute calRevenueDetail {T}, {Y}, {M} "
+            Meterial = painting(sql)                
+        except:
+            return render_template('flaskAnalyzeError.html')
+    elif (M == "" and D != ""):
+        return render_template('flaskAnalyzeError.html')
+    else:            
+        try:
+            Meterial = painting(sql)
+            sql = f"Execute calRevenueDetail {T}, {Y}, {M}, {D} "                
+        except:
+            return render_template('flaskAnalyzeError.html')  
+   
+    return render_template('flaskAnalyzeResult.html', **locals())  
 
     
 if __name__ == "__main__":

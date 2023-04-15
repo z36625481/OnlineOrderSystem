@@ -85,9 +85,22 @@ def menu(thisOrderNum, thisTableID, thisToken):
         return render_template("flaskMenu.html", **locals())
         conn.close()
 
-@app.route('/checkOrder')
-def checkorder():
-    return render_template("flaskOrder.html", **locals())
+@app.route('/checkOrder/<int:thisOrderNum>/<int:thisTableID>/<string:thisToken>')
+def checkorder(thisOrderNum, thisTableID, thisToken):
+    try:            
+        sql = f"execute SelectCartList {thisOrderNum}"
+        sumCartList = db.engine.execute(sql)
+        sql = f"execute calTotal {thisOrderNum}"
+        cursor.execute(sql)
+        sumTotal = cursor.fetchone()[0]
+    except Exception as err:
+        raise err
+    finally:       
+        cleanup(db.session)  
+    
+    sumCartList =list(sumCartList)
+    
+    return render_template("flaskOrder.html", orderNum=thisOrderNum, cartList=sumCartList, tableID=thisTableID, total=sumTotal, token=thisToken)
     
 if __name__ == "__main__":    
      app.run()
