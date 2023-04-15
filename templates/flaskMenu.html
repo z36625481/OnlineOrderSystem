@@ -3,16 +3,16 @@
   <head>    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">  
-    <link rel='shortcut icon' href='../../static/images/menu.ico' type='image/x-icon'>
-    <link rel="stylesheet" href="../../static/styles/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="../../static/styles/order.css" type="text/css">
+    <link rel='shortcut icon' href='../../../static/images/menu.ico' type='image/x-icon'>
+    <link rel="stylesheet" href="../../../static/styles/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="../../../static/styles/order.css" type="text/css">
     <title>老哥麵店</title>             
   </head>
   <body>
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" herf="#"><img src="../../static/images/menu.png" class="decorate">&nbsp老哥麵店&nbsp訂單編號：{{thisOrderNum}}</a>
+          <a class="navbar-brand" herf="#"><img src="../../../static/images/menu.png" class="decorate">&nbsp老哥麵店&nbsp訂單編號：{{thisOrderNum}}</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -29,12 +29,12 @@
                   關於我們
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                  <li><a class="dropdown-item" href="#"><img src="../../static/images/dish.png" class="decorate">&nbsp店家資訊</a></li>
-                  <li><a class="dropdown-item" href="https://pse.is/4vwlwk" target="_blank"><img src="../../static/images/facebook.png" class="decorate">&nbspFB粉絲團</a></li>
+                  <li><a class="dropdown-item" href="#"><img src="../../../static/images/dish.png" class="decorate">&nbsp店家資訊</a></li>
+                  <li><a class="dropdown-item" href="https://pse.is/4vwlwk" target="_blank"><img src="../../../static/images/facebook.png" class="decorate">&nbspFB粉絲團</a></li>
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal"><img src="../../static/images/cart.png" class="decorate">購物車</a> 
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal"><img src="../../../static/images/cart.png" class="decorate">購物車</a> 
               </li>              
             </ul>            
           </div>
@@ -42,7 +42,7 @@
       </nav>
     <!-- banner -->
       <div class="banner overflow-hidden d-none d-md-block">
-        <img src="../../static/images/banner2.jpg" class="w-100 h-100">
+        <img src="../../../static/images/banner2.jpg" class="w-100 h-100">
       </div>      
     <!-- categorylist -->
       <div class="container mt-3">
@@ -77,7 +77,7 @@
                 </div>  
                 <div class="col-md-2">
                   <div class="card-img mt-1" >                  
-                    <button class="btn" data-bs-toggle="modal" data-bs-target="#itemsModal" id={{item.0}} title={{item.2}} value={{item.1}}><img src="../../static/images/add.png" class="decorate"></button>                  
+                    <button class="btn" data-bs-toggle="modal" data-bs-target="#itemsModal" id={{item.0}} title={{item.2}} value={{item.1}}><img src="../../../static/images/add.png" class="decorate"></button>                  
                   </div>                 
                 </div>                 
               </div>
@@ -210,7 +210,7 @@
       `
           <div class="row">
             <div class="col-md-4 offset-md-4">
-              <img src="../../static/images/noItems.jpg" class="cartImg">
+              <img src="../../../static/images/noItems.jpg" class="cartImg">
             </div>
           </div>
           <div id="modal-body-text">              
@@ -318,7 +318,7 @@
           })
       })
     </script>
-    <script src="../../static/scripts/popper.min.js"></script>  
-    <script src="../../static/scripts/bootstrap.min.js"></script>    
+    <script src="../../../static/scripts/popper.min.js"></script>  
+    <script src="../../../static/scripts/bootstrap.min.js"></script>    
   </body>
 </html>

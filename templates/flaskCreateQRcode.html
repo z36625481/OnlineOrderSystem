@@ -34,10 +34,11 @@
       <h3>訂單建立完成，請將QRcode交給客人進行點餐！</h3>
     </div>
     <div class="container">
+      {% for info in orderInfo %}
       <div class="mb-3 row">
-        <label for={{orderNum}} class="col-md-2 offset-md-4 col-form-label text-center">訂單編號：</label>
+        <label for={{info.0}} class="col-md-2 offset-md-4 col-form-label text-center">訂單編號：</label>
         <div class="col-md-3">
-          <input type="text" readonly class="form-control-plaintext text-info" id="orderNum" value={{orderNum}}>
+          <input type="text" readonly class="form-control-plaintext text-info" id="orderNum" value={{info.0}}>
         </div>
       </div>
       <div class="mb-3 row">
@@ -47,6 +48,13 @@
         </div>
       </div>
       <div class="mb-3 row">
+        <label for={{info.1}} class="col-md-2 offset-md-4 col-form-label text-center">識別碼：</label>
+        <div class="col-md-3">
+          <input type="text" readonly class="form-control-plaintext text-info" id="token" value={{info.1}}>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="mb-3 row">
         <div class="col-md-4 offset-md-5" id="imgQRcode">
         </div>
       </div>
@@ -55,10 +63,13 @@
       const imgQRcode = document.getElementById('imgQRcode')
       const orderNum = document.getElementById('orderNum')
       const tableID = document.getElementById('tableID')
+      const token = document.getElementById('token')
       
       let orderNumUrl = '/' + orderNum.value
       let tableIDUrl = '/' + tableID.value
-      let url = 'https://05a2-2001-b011-d80a-5128-716b-60c8-2247-72a1.ngrok-free.app/menu' + orderNumUrl + tableIDUrl
+      let tokenUrl = '/' + token.value
+
+      let url = 'https://4c29-2001-b011-d80a-5128-18ca-6cc9-72b6-d047.ngrok-free.app/menu' + orderNumUrl + tableIDUrl + tokenUrl
 
       const img =
       `

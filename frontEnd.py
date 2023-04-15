@@ -1,7 +1,6 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
-import datetime
 import pyodbc
 import json
 
@@ -22,8 +21,9 @@ def cleanup(session):
 def index():
     return '資料庫連線成功'
 
-@app.route('/menu/<int:thisOrderNum>/<int:thisTableID>', methods=['GET', 'POST'])
-def menu(thisOrderNum, thisTableID):      
+@app.route('/menu/<int:thisOrderNum>/<int:thisTableID>/<string:thisToken>', methods=['GET', 'POST'])
+def menu(thisOrderNum, thisTableID, thisToken):
+    
     if request.method == 'POST':              
         cartListStr = request.form['cartList']        
         total = int(request.form['total'])
@@ -52,28 +52,38 @@ def menu(thisOrderNum, thisTableID):
         
         sumCartList =list(sumCartList)
         
-        return render_template("flaskOrder.html", orderNum=thisOrderNum, cartList=sumCartList, tableID=thisTableID, total=sumTotal)
+        return render_template("flaskOrder.html", orderNum=thisOrderNum, cartList=sumCartList, tableID=thisTableID, total=sumTotal, token=thisToken)
         conn.close()
-                       
-    try:
-        sql = "execute SelectDishType"
-        DishType = db.engine.execute(sql)
-        sql = "execute SelectMenu"
-        menu = db.engine.execute(sql)
-        sql = "execute SelectSideDish"
-        sideDish = db.engine.execute(sql)
-        sql = "select TableID from dbo.seat"
-        tables = db.engine.execute(sql)
-    except Exception as err:
-        raise err    
     
-    DishType = list(DishType)    
-    menu = list(menu)
-    sideDish = list(sideDish)
-    tables = list(tables) 
-           
-    return render_template("flaskMenu.html", **locals())
-    conn.close()
+    try:
+        sql = f"select orderNum from OrderMeterial where token = '{thisToken}'"
+        cursor.execute(sql)
+        checkOrderNum = cursor.fetchone()[0]
+    except Exception:
+        return render_template("flaskMenuError.html")
+    
+    if (thisOrderNum != checkOrderNum):
+        return render_template("flaskMenuError.html")    
+    else:                   
+        try:
+            sql = "execute SelectDishType"
+            DishType = db.engine.execute(sql)
+            sql = "execute SelectMenu"
+            menu = db.engine.execute(sql)
+            sql = "execute SelectSideDish"
+            sideDish = db.engine.execute(sql)
+            sql = "select TableID from dbo.seat"
+            tables = db.engine.execute(sql)
+        except Exception as err:
+            raise err    
+        
+        DishType = list(DishType)    
+        menu = list(menu)
+        sideDish = list(sideDish)
+        tables = list(tables) 
+               
+        return render_template("flaskMenu.html", **locals())
+        conn.close()
 
 @app.route('/checkOrder')
 def checkorder():

@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Apr  9 13:20:34 2023
-
-@author: DYH
-"""
-
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
@@ -42,7 +35,6 @@ def modifyMenu():
             raise err
         finally:            
             cleanup(db.session)
-                           
     try:
         sql = "execute SelectDishType"
         DishType = db.engine.execute(sql)
@@ -90,38 +82,7 @@ def insertMenu():
     DishType = list(DishType)    
     menu = list(menu)
                 
-    return render_template("flaskInsertMenu.html", **locals())    
-
-@app.route('/checkRevenue', methods=['GET', 'POST'])
-def checkRevenue():
-    '''
-        if request.method == 'POST':
-        payTime = (datetime.datetime.now())
-        payTimeStr = payTime.strftime("%Y-%m-%d %H:%M:%S")
-        orderNum = int(request.values['checkNum'])
-        try:
-            sql = (f"execute UpdatePayTime {orderNum}, '{payTimeStr}'")
-            cursor.execute(sql)
-            conn.commit()
-        except Exception as err:
-            raise err
-        finally:            
-            cleanup(db.session)
-    '''                       
-    try:
-        sql = "execute SelectDishType"
-        DishType = db.engine.execute(sql)
-        sql = "execute SelectMenu"
-        menu = db.engine.execute(sql)        
-    except Exception as err:
-        raise err
-    finally:
-        cleanup(db.session)
-    
-    DishType = list(DishType)    
-    menu = list(menu)
-                
-    return render_template("flaskCheckRevenue.html", **locals())
+    return render_template("flaskInsertMenu.html", **locals()) 
 
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():

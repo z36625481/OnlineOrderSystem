@@ -5,13 +5,8 @@ use Onlineordersys
 USE master
 GO
 ALTER AUTHORIZATION ON DATABASE::Onlineordersys TO pyuser
-
 delete from menu
 
-select * from menu
-go
-select * from MenuType
-go
 select * from MenuItems
 go
 select * from Menuplus
@@ -19,6 +14,10 @@ go
 select * from MenuChoose
 go
 select * from seat
+go
+select * from menu
+go
+select * from MenuType
 go
 select * from OrderMeterial 
 go
@@ -91,6 +90,7 @@ create table OrderMeterial(
     OrderTime datetime not null, -- 點餐時間
     PayTime datetime null,       -- 結帳時間
     TableID int foreign key references seat(TableID) not null, -- 參考桌號
+	token nvarchar(50) unique not null -- 亂碼(token) 
     )
 
 -- 訂單明細
@@ -101,9 +101,6 @@ create table OrderRecord(
     Quantity int not null,        -- 數量
     TableID int foreign key references seat(TableID) not null -- 參考桌號
     )
-
-
-
 
 
 

@@ -21,7 +21,8 @@ body {
 	text-decoration: none;            
 }
 .list-group-item,
-#modal-body-text{
+#modal-body-text,
+.hint{
 	text-align: center;
 }
 .categorylabel{            

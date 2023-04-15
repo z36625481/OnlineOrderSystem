@@ -47,7 +47,7 @@ def YMD():
     # date = f'{Y}'+'-'+f'{M}'+'-'+f'{D}'
     # print(date)
     """"'{Y}-{M}-{D}'"""
-    sql = f"Execute SelectMonth '{Y}', '{M}' "
+    sql = f"Execute calRevenue '{Y}', '{M}' "
     A = db.engine.execute(sql)
     Meterial = A.fetchall()
     
@@ -77,7 +77,7 @@ def TYPE():
     Y = request.args.get('Y')
     M = request.args.get('M')
     T = request.args.get('type')
-    sql = f"Execute SelectMonthDetail '{Y}', '{M}', '{T}'"
+    sql = f"Execute calRevenueDetail '{T}', '{Y}', '{M}' "
     A = db.engine.execute(sql)
     Meterial = A.fetchall()
     
@@ -126,12 +126,12 @@ def signup():
 def signin():
     E = request.form["E"]
     P = request.form["P"]
-    sql = f"select count(*) from signup where Email = '{E}' and PW = '{P}' "
+    sql = f"select count(*) from staff where Email = '{E}' and PW = '{P}' "
     result = db.engine.execute(sql).scalar()
     if result is None or result == 0:
-        return render_template('error.html')
+        return '失敗!'
     else:
-        return render_template('home.html')
+        return 'OK'
 
 
 @app.route('/ip')
