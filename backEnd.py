@@ -118,6 +118,28 @@ def createOrder(thisAccount, thispwd):
     return render_template("flaskCreateOrder.html", **locals())
     conn.close()
     
+@app.route('/orderDetail/<string:thisAccount>/<string:thispwd>', methods=['GET', 'POST'])
+def orderDetail(thisAccount, thispwd):
+    result = tryAccount(thisAccount, thispwd)
+    if result is None or result == 0:
+        return render_template("flaskLoginError.html")
+    try:
+        sql = "select OrderNum from OrderMeterial where PayTime is null"
+        orderNum = db.engine.execute(sql)
+        sql = "execute SelectOrderDetail"
+        detail = db.engine.execute(sql)              
+    except Exception as err:
+        raise err
+    finally:
+        cleanup(db.session)
+        
+    orderNum = list(orderNum)      
+    detail = list(detail)  
+    
+    return render_template("flaskOrderDetail.html", **locals())
+    conn.close()
+
+    
 @app.route('/getCheck/<string:thisAccount>/<string:thispwd>', methods=['GET', 'POST'])
 def getCheck(thisAccount, thispwd):
     result = tryAccount(thisAccount, thispwd)

@@ -341,6 +341,23 @@ begin
 end
 go
 
+create or alter procedure SelectOrderDetail
+as
+begin
+	SET NOCOUNT ON
+	select o.OrderNum,
+		   m.dishes,
+		   o.Quantity
+	from OrderRecord o join OrderMeterial l on o.OrderNum = l.orderNum
+					   join menu m on o.DisherID = m.DisherID
+	where l.PayTime is null
+	SET NOCOUNT OFF
+end
+go
+
+
+
+
 
 
 
