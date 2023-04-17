@@ -302,7 +302,7 @@ def analyzeDetail(thisAccount, thispwd):
     else:            
         try:
             Meterial = painting(sql)
-            sql = f"Execute calRevenueDetail {T}, {Y}, {M}, {D} "                
+            sql = f"Execute calRevenueDetail {T}, {Y}, {M}, {D}"                
         except:
             return render_template('flaskAnalyzeError.html')  
    

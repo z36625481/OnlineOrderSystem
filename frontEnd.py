@@ -19,7 +19,7 @@ def cleanup(session):
      
 @app.route('/')
 def index():
-    return '資料庫連線成功'
+    return '資料庫連線成功！'
 
 @app.route('/menu/<int:thisOrderNum>/<int:thisTableID>/<string:thisToken>', methods=['GET', 'POST'])
 def menu(thisOrderNum, thisTableID, thisToken):
