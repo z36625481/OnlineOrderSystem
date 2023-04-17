@@ -124,7 +124,7 @@ def orderDetail(thisAccount, thispwd):
     if result is None or result == 0:
         return render_template("flaskLoginError.html")
     try:
-        sql = "select OrderNum from OrderMeterial where PayTime is null"
+        sql = "select OrderNum, tableID from OrderMeterial where PayTime is null"
         orderNum = db.engine.execute(sql)
         sql = "execute SelectOrderDetail"
         detail = db.engine.execute(sql)              

@@ -1,3 +1,6 @@
+use Onlineordersys
+go
+
 create or alter procedure SelectDishType
 as
 begin
