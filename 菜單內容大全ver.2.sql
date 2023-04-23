@@ -1,24 +1,8 @@
-﻿-- delete from Menu_plus
-
--- delete menu from 
-
--- select * from Menu_plus go select * from menu
-
+﻿-- 初始化店內資料
 use Onlineordersys
 SET NOCOUNT ON
 
-/*
-select * from Menu
-go
-select * from MenuChoose
-go
-select * from MenuItems
-go
-select * from MenuPlus
-go
-
-*/
---員工資料
+-- 員工資料
 insert into staff(Email, PW, personnel)
 values('Boss@OldBrother.com', 'I_am_Boss', 'Boss')
 insert into staff(Email, PW, personnel)
@@ -28,21 +12,7 @@ values('waiter@OldBrother.com', 'I_am_Waiter', 'Staff')
 insert into staff(Email, PW, personnel)
 values('Trash@OldBrother.com', 'I_am_Trash', 'Staff')
 
---菜單分類
-/*
-insert into MenuType(TypeID, DishType)
-values(1, '麵食')
-insert into MenuType(TypeID, DishType)
-values(2, '鍋燒')
-insert into MenuType(TypeID, DishType)
-values(3, '飯食')
-insert into MenuType(TypeID, DishType)
-values(4, '湯品')
-insert into MenuType(TypeID, DishType)
-values(5, '小菜')
-insert into MenuType(TypeID, DishType)
-values(6, '其他')    */
-
+-- 餐點類型
 insert into MenuType(DishType)
 values('麵食')
 insert into MenuType(DishType)
@@ -56,8 +26,8 @@ values('小菜')
 insert into MenuType(DishType)
 values('其他')
 
-
--- A 料理對應到 B 類型
+-- 可選屬性種類
+-- 之後可新增辣度等等
 insert into MenuItems(MenuItemsID, items)
 values(1, '份量')
 insert into MenuItems(MenuItemsID, items)
@@ -65,10 +35,8 @@ values(2, '乾湯')
 insert into MenuItems(MenuItemsID, items)
 values(3, '主食')
 
-
-
---配料資料   ( B 類型對應到 C 選項)
---                         C        B
+-- 各種類有的詳細名稱
+-- 例如：份量 有 大、小
 insert into MenuPlus(dishes,MenuItemsID)
 values('大', 1)
 insert into MenuPlus(dishes,MenuItemsID)
@@ -94,28 +62,21 @@ values('飯湯', 3)
 insert into MenuPlus(dishes,MenuItemsID)
 values('科學麵', 3)
 
-
-
-
--- 菜單資料
-
+-- 餐點資料
+-- 餐點名稱、價格、餐點類型ID
+-- 麵食系列
 insert into menu(dishes, price, TypeID)
 values('陽春麵', 45, 1)
-
 insert into menu(dishes, price, TypeID)
 values('餛飩麵', 55, 1)
-
 insert into menu(dishes, price, TypeID)
 values('沙茶麵', 55, 1)
-
 insert into menu(dishes, price, TypeID)
 values('麻醬麵', 55, 1)
-
 insert into menu(dishes, price, TypeID)
 values('榨菜肉絲麵', 55, 1)
 
---- 鍋燒系列 
-
+-- 鍋燒系列 
 insert into menu(dishes, price, TypeID)
 values('鍋燒-原味', 75, 2)
 insert into menu(dishes, price, TypeID)
@@ -145,15 +106,13 @@ values('鍋燒-蔬菜蛋花', 70, 2)
 insert into menu(dishes, price, TypeID)
 values('鍋燒-芋頭', 70, 2)
 
--- 飯類
+-- 飯食系列
 insert into menu(dishes, price, TypeID)
 values('白飯', 10, 3)
 insert into menu(dishes, price, TypeID)
 values('雞柳飯', 40, 3)
 insert into menu(dishes, price, TypeID)
 values('豬肉飯', 40, 3)
-
--- 水煮健康餐盒
 insert into menu(dishes, price, TypeID)
 values('雞柳便當', 70, 3)
 insert into menu(dishes, price, TypeID)
@@ -167,7 +126,7 @@ values('豬蝦便當', 80, 3)
 insert into menu(dishes, price, TypeID)
 values('豬雞便當', 80, 3)
 
-----湯類
+-- 湯類
 insert into menu(dishes, price, TypeID)
 values('魚皮湯', 55, 4)
 insert into menu(dishes, price, TypeID)
@@ -197,7 +156,6 @@ values('蔬菜蛋花湯', 55, 4)
 insert into menu(dishes, price, TypeID)
 values('榨菜肉絲湯', 40, 4)
 
-
 -- 其他
 insert into menu(dishes, price, TypeID)
 values('燙青菜', 45, 5)
@@ -218,8 +176,8 @@ values('20粒裝生水餃', 85, 6)
 insert into menu(dishes, price, TypeID)
 values('特製辣椒', 150, 6)
 
-
--- 菜單品項關聯
+-- 類型可選種類關聯
+-- 例如：麵食可以「加大」、「乾湯」；鍋燒可以「主食」
 insert into MenuChoose(TypeID, MenuItemsID)
 values(1, 1)
 insert into MenuChoose(TypeID, MenuItemsID)
@@ -227,9 +185,7 @@ values(1, 2)
 insert into MenuChoose(TypeID, MenuItemsID)
 values(2, 3)
 
-
 -- 座位
-
 insert into seat(TableID, seat)
 values(1, 6)
 insert into seat(TableID, seat)

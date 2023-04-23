@@ -1,79 +1,54 @@
--- create database Onlineordersys
--- drop database Onlineordersys
-use Onlineordersys
-/*
-USE master
-GO
-ALTER AUTHORIZATION ON DATABASE::Onlineordersys TO pyuser
-delete from menu
-
-select * from MenuItems
-go
-select * from Menuplus
-go
-select * from MenuChoose
-go
-select * from seat
-go
-select * from menu
-go
-select * from MenuType
-go
-select * from OrderMeterial 
-go
-select * from OrderRecord 
-go
-select * from staff
-go
-select * from OrderMeterial where PayTime is null
-go
-select * from OrderMeterial a join OrderRecord b on a.OrderNum = b.OrderNum 
-where a.PayTime is null
-go
-select * from OrderMeterial a join OrderRecord b on a.OrderNum = b.OrderNum 
-go
+/* 
+1.先建立資料庫
+	create database Onlineordersys
+2.將資料庫權限移交給 pyuser (需先創立pyuser這個使用者)
+	USE master
+	GO
+	ALTER AUTHORIZATION ON DATABASE::Onlineordersys TO pyuser
+3.建立資料表
 */
--- 分類
+use Onlineordersys
+
+-- 餐點類型
 create table MenuType(
-    TypeID int primary key identity not null , -- 類型ID
-    DishType nvarchar(50) unique not null-- 什麼類型
+    TypeID int primary key identity not null , -- 餐點類型ID
+    DishType nvarchar(50) unique not null	   -- 餐點類型名稱，不可重複
     )
 
---菜單
+-- 菜單
 create table menu(
-    DisherID int primary key identity not null, -- 料理 ID
-    dishes nvarchar(50) unique not null,     -- 料理名稱
-    price int not null,   -- 金額
-	TypeID int foreign key references MenuType(TypeID) on delete cascade not null, -- 料理是甚麼類型
+    DisherID int primary key identity not null, -- 餐點ID
+    dishes nvarchar(50) unique not null,        -- 餐點名稱，不可重複
+    price int not null,						    -- 單品價格
+	TypeID int foreign key references MenuType(TypeID) on delete cascade not null -- 餐點的類型
     )
---create unique index same on menu(dishes)  -- 建立唯一索引 確保其欄位( 料理名稱 )值之唯一性
---alter table menu ADD DishType nvarchar(50)
--- 品項類型 
+
+-- 可選屬性種類
+-- 乾湯、大小、主食等等
 create table MenuItems(
-    MenuItemsID int primary key not null,   -- 品項的ID
-    items nvarchar(50) unique null              ,  -- 品項名稱
+    MenuItemsID int primary key not null,   -- 可選屬性種類ID
+    items nvarchar(50) unique null          -- 可選屬性種類名稱
     )
-
---create unique index same on MenuItems(items)  -- 建立唯一索引 確保其欄位( B[品項名稱] )值之唯一性
-
--- 品項屬性(配料)
+	
+-- 各種類有的詳細名稱
+-- 例如：份量 有 大、小；乾湯 有 乾、湯
 create table MenuPlus(
-    SideDishID int primary key identity  not null,  -- 配料 ID
-    MenuItemsID int foreign key references MenuItems(MenuItemsID) on delete cascade not null, -- 對應到甚麼類型的料理
-    dishes nvarchar(50) unique not null,   -- 配料名稱
+    SideDishID int primary key identity  not null,  -- 種類詳細ID
+    MenuItemsID int foreign key references MenuItems(MenuItemsID) on delete cascade not null, -- 可選屬性種類ID
+    dishes nvarchar(50) unique not null,   -- 種類詳細名稱
     )
---create unique index same on MenuPlus(dishes)  -- 建立唯一索引 確保其欄位( B[品項名稱] )值之唯一性
 
--- 菜單品項關聯 (A 料理對應到 B 類型)
+-- 類型可選種類關聯
+-- 例如：麵食可以「加大」、「乾湯」；鍋燒可以「主食」
 create table MenuChoose(
-    TypeID int foreign key references MenuType(TypeID) on delete cascade not null,       -- 什麼樣的料理
-    MenuItemsID int foreign key references MenuItems(MenuItemsID) on delete cascade　null -- 會有甚麼樣的類型選擇
+    TypeID int foreign key references MenuType(TypeID) on delete cascade not null,        -- 類型ID
+    MenuItemsID int foreign key references MenuItems(MenuItemsID) on delete cascade　null -- 可以有的種類選擇
     )
   
 -- 座位
 create table seat(
     TableID int primary key  not null,  -- 桌號(ID)
-    seat int not null,   -- 位子數量
+    seat int not null,					-- 可容納人數
     )
 
 -- 員工
@@ -86,20 +61,20 @@ create table staff(
 
 -- 訂單紀錄
 create table OrderMeterial(
-    OrderNum int primary key identity not null, --訂單編號
-    OrderTime datetime not null, -- 點餐時間
-    PayTime datetime null,       -- 結帳時間
-    TableID int foreign key references seat(TableID) not null, -- 參考桌號
-	token nvarchar(50) unique not null -- 亂碼(token) 
+    OrderNum int primary key identity not null, -- 訂單編號
+    OrderTime datetime not null,				-- 訂單產生時間
+    PayTime datetime null,						-- 結帳時間
+    TableID int foreign key references seat(TableID) not null, -- 桌號
+	token nvarchar(50) unique not null			-- 識別碼 
     )
 
--- 訂單明細
+-- 訂單紀錄明細
 create table OrderRecord(
-    OrderID int primary key identity not null,  -- 訂單ID
-    OrderNum int references OrderMeterial(OrderNum) on delete cascade not null,    --訂單編號 (參考訂單紀錄)
-    DisherID int foreign key references menu(DisherID) not null,    -- 參考料理 ID
-    Quantity int not null,        -- 數量
-    TableID int foreign key references seat(TableID) not null -- 參考桌號
+    OrderID int primary key identity not null,									-- 訂單紀錄詳細ID
+    OrderNum int references OrderMeterial(OrderNum) on delete cascade not null, -- 訂單編號 (參考訂單紀錄)
+    DisherID int foreign key references menu(DisherID) not null,				-- 餐點ID
+    Quantity int not null,														-- 數量
+    TableID int foreign key references seat(TableID) not null					-- 桌號
     )
 
 

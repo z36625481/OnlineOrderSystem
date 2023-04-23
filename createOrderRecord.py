@@ -11,7 +11,7 @@ start_time = datetime.datetime(2022, 1, 1)
 data = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 # 新增隨機訂單
-for i in range(500):
+for i in range(503):
     # 訂單時間 整年 從 8~18 時 下單
     order_time = start_time + datetime.timedelta(days=random.randint(1, 365), hours=random.randint(8, 18), minutes=random.randint(1, 59))
     # 結帳時間 20 ~ 120分
